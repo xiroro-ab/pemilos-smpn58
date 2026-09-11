@@ -16,7 +16,7 @@
                 <h2>Login Panitia</h2>
                 <p>Masukkan kata sandi panitia</p>
                 <form id="admin-login-form">
-                    <input type="password" id="admin-pwd" placeholder="Password (admin123)" required>
+                    <input type="password" id="admin-pwd" placeholder="Password" required>
                     <button type="submit" class="btn">Masuk Dashboard</button>
                     <div id="admin-error" class="error-msg"></div>
                 </form>
@@ -66,8 +66,14 @@
                             <h1>Dasbor Suara</h1>
                             <p class="subtitle-dark">Pemantauan hasil pemilihan secara *real-time*.</p>
                         </div>
-                        <div class="badge live-badge">
-                            <span class="pulse-dot"></span> LIVE UPDATE
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <button class="btn btn-print" onclick="window.print()" style="padding: 8px 16px; background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                Cetak Laporan
+                            </button>
+                            <div class="badge live-badge">
+                                <span class="pulse-dot"></span> LIVE UPDATE
+                            </div>
                         </div>
                     </header>
                     

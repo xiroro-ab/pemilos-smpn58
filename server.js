@@ -115,9 +115,24 @@ app.post('/api/vote', async (req, res) => {
 });
 
 // API: Admin Login
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
     const { password } = req.body;
-    if (password === 'admin123') {
+    
+    const { data: admin, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('username', 'admin')
+        .single();
+        
+    if (error || !admin) {
+        // Fallback for local development if table doesn't exist yet
+        if (password === 'admin123') {
+            return res.json({ success: true, message: 'Login berhasil (Fallback)' });
+        }
+        return res.status(500).json({ success: false, message: 'Kesalahan sistem admin' });
+    }
+    
+    if (password === admin.password) {
         res.json({ success: true, message: 'Login berhasil' });
     } else {
         res.status(401).json({ success: false, message: 'Password salah' });
