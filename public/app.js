@@ -219,3 +219,33 @@ window.logoutStudent = function() {
     });
 }
 
+
+ 
+ / /   D o w n l o a d   T i c k e t   a s   I m a g e 
+ w i n d o w . d o w n l o a d B a d g e   =   f u n c t i o n ( )   { 
+         c o n s t   b a d g e E l e m e n t   =   d o c u m e n t . q u e r y S e l e c t o r ( ' # s u c c e s s - v i e w   >   d i v ' ) ; 
+         
+         i f   ( t y p e o f   h t m l 2 c a n v a s   ! = =   ' u n d e f i n e d ' )   { 
+                 c o n s t   o r i g i n a l R a d i u s   =   b a d g e E l e m e n t . s t y l e . b o r d e r R a d i u s ; 
+                 b a d g e E l e m e n t . s t y l e . b o r d e r R a d i u s   =   ' 0 ' ; 
+                 
+                 h t m l 2 c a n v a s ( b a d g e E l e m e n t ,   { 
+                         s c a l e :   2 , 
+                         b a c k g r o u n d C o l o r :   ' # 0 f 1 7 2 a ' , 
+                         l o g g i n g :   f a l s e 
+                 } ) . t h e n ( c a n v a s   = >   { 
+                         b a d g e E l e m e n t . s t y l e . b o r d e r R a d i u s   =   o r i g i n a l R a d i u s ; 
+                         
+                         c o n s t   l i n k   =   d o c u m e n t . c r e a t e E l e m e n t ( ' a ' ) ; 
+                         l i n k . d o w n l o a d   =   ' V o t e r - P a s s - '   +   ( c u r r e n t U s e r   ?   c u r r e n t U s e r . n i s n   :   ' P e m i l o s ' )   +   ' . p n g ' ; 
+                         l i n k . h r e f   =   c a n v a s . t o D a t a U R L ( ' i m a g e / p n g ' ) ; 
+                         l i n k . c l i c k ( ) ; 
+                 } ) . c a t c h ( e r r   = >   { 
+                         c o n s o l e . e r r o r ( ' G a g a l   m e m b u a t   s c r e e n s h o t : ' ,   e r r ) ; 
+                         a l e r t ( ' M a a f ,   f i t u r   s i m p a n   g a m b a r   t i d a k   d i d u k u n g   d i   p e r a n g k a t   i n i . ' ) ; 
+                 } ) ; 
+         }   e l s e   { 
+                 a l e r t ( ' L i b r a r y   s c r e e n s h o t   b e l u m   t e r m u a t   s e m p u r n a .   S i l a k a n   s c r e e n s h o t   m a n u a l . ' ) ; 
+         } 
+ }  
+ 

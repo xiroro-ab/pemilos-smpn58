@@ -71,7 +71,7 @@
                 </div>
                 
                 <!-- Ticket Body -->
-                <div style="padding: 30px 20px; text-align: center; background: url('https://www.transparenttextures.com/patterns/cubes.png'); border-bottom: 2px dashed rgba(255,255,255,0.1);">
+                <div style="padding: 30px 20px; text-align: center; background: rgba(30, 41, 59, 0.5); border-bottom: 2px dashed rgba(255,255,255,0.1);">
                     <div style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 2px solid var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
                         <span style="font-size: 2.5rem;">🎉</span>
                     </div>
@@ -92,7 +92,10 @@
             
             <div style="margin-top: 25px; text-align: center; max-width: 400px; margin-left: auto; margin-right: auto;">
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">📸 Pamerin ke teman-temanmu di Instagram/WA Story!</p>
-                <button class="btn-primary" onclick="location.reload()" style="width: 100%; font-size: 1.1rem; padding: 15px; border-radius: 12px; background: linear-gradient(90deg, var(--primary), #8b5cf6);">Selesai & Keluar</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-secondary" onclick="downloadBadge()" style="flex: 1; font-size: 1rem; padding: 12px; border-radius: 12px;">Simpan Tiket ⬇️</button>
+                    <button class="btn-primary" onclick="location.reload()" style="flex: 1; font-size: 1rem; padding: 12px; border-radius: 12px; background: linear-gradient(90deg, var(--primary), #8b5cf6);">Selesai</button>
+                </div>
             </div>
         </div>
         
@@ -121,6 +124,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

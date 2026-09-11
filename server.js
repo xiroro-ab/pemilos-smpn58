@@ -51,7 +51,7 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/candidates', async (req, res) => {
     const { data: candidates, error } = await supabase
         .from('candidates')
-        .select('id, name, vision, image')
+        .select('*')
         .order('id', { ascending: true });
         
     if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil data paslon.' });
@@ -183,11 +183,18 @@ app.get('/api/admin/dashboard', async (req, res) => {
 
 // API: Update Candidate (Tanpa Multer, langsung simpan Base64 URL)
 app.post('/api/admin/update-candidate', async (req, res) => {
-    const { id, name, vision, image } = req.body;
+    const { id, name, vision, image, visionVideoUrl, visionPoster } = req.body;
     
+    // We update all provided fields
     const { error } = await supabase
         .from('candidates')
-        .update({ name, vision, image })
+        .update({ 
+            name, 
+            vision, 
+            image, 
+            vision_video_url: visionVideoUrl || null, 
+            vision_poster: visionPoster || null 
+        })
         .eq('id', id);
         
     if (error) {

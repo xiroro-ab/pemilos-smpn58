@@ -149,7 +149,20 @@ function renderSettings(candidates) {
                 <label>Visi & Misi</label>
                 <textarea id="vision-${c.id}" rows="3">${c.vision}</textarea>
                 
-                <button class="btn btn-save" onclick="saveCandidate(${c.id})">Simpan Data & Foto</button>
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                <label>URL Video YouTube (Opsional, untuk Live Feed)</label>
+                <input type="url" id="video-${c.id}" value="${c.vision_video_url || ''}" placeholder="https://www.youtube.com/watch?v=...">
+                
+                <label>Atau Upload Poster Kampanye (Opsional)</label>
+                <div class="file-upload-wrapper">
+                    <label class="btn-upload" for="poster-${c.id}">📂 Pilih Poster...</label>
+                    <input type="file" id="poster-${c.id}" accept="image/png, image/jpeg, image/webp" onchange="previewPoster(${c.id})">
+                    <span class="file-name-display" id="poster-filename-${c.id}">Pilih gambar (.jpg / .png)</span>
+                </div>
+                <!-- Poster Preview (Hidden initially) -->
+                <img src="${c.vision_poster || ''}" id="poster-preview-${c.id}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; display: ${c.vision_poster ? 'block' : 'none'};">
+                
+                <button class="btn btn-save" onclick="saveCandidate(${c.id})">Simpan Semua Perubahan</button>
             </div>
         `;
         container.appendChild(div);
@@ -171,22 +184,43 @@ function previewFile(id) {
     }
 }
 
+function previewPoster(id) {
+    const fileInput = document.getElementById(`poster-${id}`);
+    const nameDisplay = document.getElementById(`poster-filename-${id}`);
+    const previewImg = document.getElementById(`poster-preview-${id}`);
+    
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        nameDisplay.textContent = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => { 
+            previewImg.src = e.target.result; 
+            previewImg.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 async function saveCandidate(id) {
     const name = document.getElementById(`name-${id}`).value;
     const vision = document.getElementById(`vision-${id}`).value;
+    const videoUrl = document.getElementById(`video-${id}`).value;
     const previewImg = document.getElementById(`preview-${id}`);
+    const posterImg = document.getElementById(`poster-preview-${id}`);
     
     const btn = document.querySelector(`#form-cand-${id} .btn-save`);
     btn.textContent = "Mengunggah...";
     
     // Ambil base64 dari tag img
     const imageBase64 = previewImg.src;
+    const posterBase64 = posterImg.style.display !== 'none' ? posterImg.src : null;
     
     try {
         const res = await fetch('/api/admin/update-candidate', { 
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, name, vision, image: imageBase64 })
+            body: JSON.stringify({ id, name, vision, image: imageBase64, visionVideoUrl: videoUrl, visionPoster: posterBase64 })
         });
         const data = await res.json();
         if(data.success) {
@@ -363,7 +397,7 @@ async function renderLiveFeed() {
                 item.style.top = `${topPos}%`;
                 
                 // Durasi animasi acak agar bervariasi (12s - 18s)
-                const duration = Math.floor(Math.random() * 6) + 12;
+                const duration = Math.floor(Math.random() * 4) + 8;
                 item.style.animationDuration = `${duration}s`;
                 
                 if (act.action === 'LOGIN') {
@@ -401,10 +435,16 @@ async function renderLiveFeed() {
     }
 }
 
+let ytPlayer = null;
+let carouselTimeout = null;
+
 function updateCarousel() {
     const bgContainer = document.getElementById('live-carousel-bg');
     const contentContainer = document.getElementById('live-carousel-content');
     if (!bgContainer || !contentContainer || globalCandidates.length === 0) return;
+    
+    // Bersihkan timeout sebelumnya
+    if (carouselTimeout) clearTimeout(carouselTimeout);
     
     const c = globalCandidates[currentCarouselIndex];
     
@@ -412,15 +452,99 @@ function updateCarousel() {
     bgContainer.style.opacity = '0';
     
     setTimeout(() => {
-        contentContainer.innerHTML = `
-            <img src="${c.image}" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=250&bold=true'" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 20px; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4);">
-            <h2 style="font-size: 3rem; color: white; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0,0,0,0.8);">Paslon 0${c.id}: ${c.name}</h2>
-            <p style="font-size: 1.5rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6; font-style: italic;">"${c.vision}"</p>
-        `;
-        // Fade in
-        bgContainer.style.opacity = '0.7';
+        let contentHTML = '';
+        let displayDuration = 10000; // Default 10 detik
         
-        currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+        // 1. Cek apakah ada Video YouTube
+        if (c.vision_video_url && c.vision_video_url.includes('youtu')) {
+            // Ekstrak ID YouTube (support youtu.be dan youtube.com)
+            let videoId = '';
+            if (c.vision_video_url.includes('youtu.be/')) {
+                videoId = c.vision_video_url.split('youtu.be/')[1].split('?')[0];
+            } else if (c.vision_video_url.includes('v=')) {
+                videoId = c.vision_video_url.split('v=')[1].split('&')[0];
+            }
+            
+            if (videoId) {
+                // Tampilkan Iframe Player
+                contentHTML = `
+                    <div style="width: 800px; max-width: 90vw; border-radius: 20px; overflow: hidden; border: 4px solid var(--primary); box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); background: black;">
+                        <div id="yt-player-container"></div>
+                    </div>
+                `;
+                
+                contentContainer.innerHTML = contentHTML;
+                bgContainer.style.opacity = '0.9'; // Lebih jelas untuk video
+                
+                // Inisialisasi Player
+                if (window.YT && window.YT.Player) {
+                    ytPlayer = new YT.Player('yt-player-container', {
+                        height: '450',
+                        width: '100%',
+                        videoId: videoId,
+                        playerVars: {
+                            'autoplay': 1,
+                            'controls': 0,
+                            'rel': 0,
+                            'showinfo': 0,
+                            'mute': 0,
+                            'modestbranding': 1
+                        },
+                        events: {
+                            'onStateChange': function(event) {
+                                // Jika video selesai (State 0) atau error, lanjut ke paslon berikutnya
+                                if (event.data === YT.PlayerState.ENDED) {
+                                    currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+                                    updateCarousel();
+                                }
+                            },
+                            'onError': function(event) {
+                                currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+                                updateCarousel();
+                            }
+                        }
+                    });
+                } else {
+                    // Fallback jika API YT belum load
+                    contentContainer.innerHTML = `
+                        <iframe width="800" height="450" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 4px solid var(--primary);"></iframe>
+                    `;
+                    displayDuration = 60000; // Set 60 detik fallback
+                    carouselTimeout = setTimeout(() => {
+                        currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+                        updateCarousel();
+                    }, displayDuration);
+                }
+                
+                return; // Jangan lanjutkan ke logika gambar
+            }
+        }
+        
+        // 2. Cek apakah ada Poster
+        if (c.vision_poster && c.vision_poster.length > 100) {
+            contentHTML = `
+                <img src="${c.vision_poster}" style="width: 800px; max-width: 90vw; border-radius: 20px; object-fit: contain; border: 4px solid var(--primary); margin-bottom: 20px; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); max-height: 70vh;">
+            `;
+            displayDuration = 60000; // 60 detik untuk poster
+            bgContainer.style.opacity = '0.7';
+        } else {
+            // 3. Fallback ke Tampilan Standar
+            contentHTML = `
+                <img src="${c.image}" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=250&bold=true'" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 20px; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4);">
+                <h2 style="font-size: 3rem; color: white; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0,0,0,0.8);">Paslon 0${c.id}: ${c.name}</h2>
+                <p style="font-size: 1.5rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6; font-style: italic;">"${c.vision}"</p>
+            `;
+            displayDuration = 30000; // 30 detik untuk teks standar
+            bgContainer.style.opacity = '0.7';
+        }
+        
+        contentContainer.innerHTML = contentHTML;
+        
+        carouselTimeout = setTimeout(() => {
+            currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+            updateCarousel();
+        }, displayDuration);
+        
     }, 1000);
 }
 
