@@ -51,11 +51,19 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/candidates', async (req, res) => {
     const { data: candidates, error } = await supabase
         .from('candidates')
-        .select('*')
+        .select('id, name, vision, image')
         .order('id', { ascending: true });
     if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil data paslon.', error: error.message });
     
     res.json({ success: true, data: candidates });
+});
+// API: Temp Clean
+app.get('/api/admin/clean', async (req, res) => {
+    const { data: candidates } = await supabase.from('candidates').select('id');
+    for (const c of candidates) {
+        await supabase.from('candidates').update({ vision_poster: null, vision_video_url: null, image: 'https://ui-avatars.com/api/?name=Paslon&size=200' }).eq('id', c.id);
+    }
+    res.json({ success: true, message: 'Database cleaned!' });
 });
 
 // API: Submit Vote (Transaction)
