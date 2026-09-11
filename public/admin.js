@@ -826,8 +826,12 @@ window.closeCustomModal = function(isConfirm) {
     }
     
     if (modalCallback) {
-        modalCallback(result);
+        const cb = modalCallback;
         modalCallback = null;
+        // Use setTimeout to allow the DOM to hide the modal before the callback potentially re-opens it
+        setTimeout(() => {
+            cb(result);
+        }, 50);
     }
 }
 
