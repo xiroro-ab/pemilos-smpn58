@@ -165,17 +165,30 @@ function castVote(candidateId, candidateName) {
                 elements.successName.textContent = currentUser.name;
                 
                 // Deteksi Gender Sederhana untuk Avatar
-                const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
-                const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
+                const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba', 'zeren'];
+                window.currentAvatarIsFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Avataaars style dari DiceBear (Penuh warna, sampai dada)
-                // Memaksa gender dari model rambut agar pria tidak menjadi wanita
-                let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let hairStyle = isFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
-                let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}`;
+                window.updateAvatarImage = function() {
+                    let seed = window.currentAvatarIsFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
+                    let hairStyle = window.currentAvatarIsFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
+                    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}`;
+                    
+                    const avatarImg = document.getElementById('voter-avatar');
+                    if(avatarImg) {
+                        avatarImg.style.transform = 'scale(0)';
+                        setTimeout(() => {
+                            avatarImg.src = avatarUrl;
+                            avatarImg.style.transform = 'scale(1.15) translateY(-6%)';
+                        }, 200);
+                    }
+                };
                 
-                const avatarImg = document.getElementById('voter-avatar');
-                if(avatarImg) avatarImg.src = avatarUrl;
+                window.toggleAvatarGender = function() {
+                    window.currentAvatarIsFemale = !window.currentAvatarIsFemale;
+                    window.updateAvatarImage();
+                };
+                
+                window.updateAvatarImage();
                 
                 showView('success');
                 

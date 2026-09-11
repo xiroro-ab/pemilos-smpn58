@@ -84,7 +84,7 @@
                     <div style="position: absolute; top: 15%; bottom: 5%; left: 12%; right: 12%; background: #041222; border-radius: 25px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); z-index: 1;"></div>
                     
                     <!-- The Avatar (Transparan, skala diperbesar) -->
-                    <img id="voter-avatar" src="" alt="Avatar" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.15) translateY(-6%); object-fit: contain;">
+                    <img id="voter-avatar" src="" alt="Avatar" onclick="toggleAvatarGender()" title="Klik untuk mengubah avatar (Laki-laki / Perempuan)" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.15) translateY(-6%); object-fit: contain; cursor: pointer; transition: transform 0.2s;">
                 </div>
                 
                 <!-- Identitas & Barcode -->
@@ -103,7 +103,7 @@
                     
                     <!-- Vertical Text -->
                     <div style="position: absolute; right: 15px; bottom: 40px; writing-mode: vertical-rl; transform: rotate(180deg); color: rgba(255,255,255,0.5); font-size: 0.65rem; font-weight: 600; letter-spacing: 2px; white-space: nowrap;">
-                        📸 WWW.INSTAGRAM.COM/SMPN58_PALEMBANG
+                        <span style="display: inline-block; transform: rotate(180deg); margin-bottom: 5px;">📸</span> WWW.INSTAGRAM.COM/SMPN58_PALEMBANG
                     </div>
                 </div>
             </div>
