@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEMILOS SMPN 58 PALEMBANG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login View -->
+        <div id="login-view" class="view active">
+            <div class="glass-card login-card">
+                <img src="https://raw.githubusercontent.com/xiroro-ab/smp58dataguru/refs/heads/main/ico.png" alt="Logo SMPN 58" class="school-logo">
+                <h1 style="font-size: 1.8rem; margin-top: 10px;">PEMILOS SMPN 58 PALEMBANG</h1>
+                <p class="subtitle">Silakan login menggunakan data dari Dapodik.</p>
+                
+                <div class="warning-text" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 0.9rem;">
+                    <div style="display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom: 8px;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <strong>PERINGATAN KEAMANAN</strong>
+                    </div>
+                    Sistem otomatis merekam Alamat IP Perangkat. Menggunakan data NISN teman adalah pelanggaran identitas berat!
+                </div>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="nisn">ID Pemilih (NISN / NIP / No. HP)</label>
+                        <input type="text" id="nisn" placeholder="Masukkan ID Pemilih (Siswa/Guru)" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn-primary" id="btn-login">Cek Identitas Pemilih</button>
+                    <div id="login-error" class="error-msg"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Voting View -->
+        <div id="vote-view" class="view hidden">
+            <header>
+                <div class="header-content">
+                    <h1>PEMILOS SMPN 58 PALEMBANG</h1>
+                    <div class="user-info">
+                        <button class="btn-logout" onclick="logoutStudent()">Kembali</button>
+                        Halo, <span id="student-name">Siswa</span>
+                    </div>
+                </div>
+            </header>
+            
+            <main>
+                <div class="instruction">
+                    <h2>Pilih Calon Ketua & Wakil Ketua OSIS</h2>
+                    <p>Klik tombol <strong>"Pilih Paslon"</strong> pada kandidat pilihan Anda. Anda hanya dapat memilih satu kali.</p>
+                </div>
+                
+                <div id="candidates-container" class="candidates-grid">
+                    <!-- Candidates injected here via JS -->
+                </div>
+            </main>
+        </div>
+
+        <!-- Success View -->
+        <div id="success-view" class="view hidden">
+            <div class="glass-card success-card">
+                <div class="success-icon">
+                    <svg width="80" height="80" fill="none" stroke="var(--success)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h1>Suara Berhasil Masuk!</h1>
+                <p>Terima kasih <strong id="success-name"></strong> telah berpartisipasi dalam Pemilos 2026.</p>
+                <p class="subtitle">Pilihan Anda bersifat rahasia dan telah direkam dengan aman.</p>
+                <button class="btn-secondary" onclick="location.reload()">Selesai & Keluar</button>
+            </div>
+        </div>
+        
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p>Memproses Keamanan...</p>
+        </div>
+        <footer class="app-footer">
+            &copy; 2026 Pemilos SMPN 58 Palembang. All Rights Reserved.<br>
+            Powered By Aris Bermansyah | Coding Support by Gemini
+        </footer>
+        
+        <!-- Custom Modal Popup -->
+        <div id="custom-modal" class="modal-overlay hidden">
+            <div class="glass-card modal-card">
+                <div id="modal-icon" class="modal-icon"></div>
+                <h2 id="modal-title">Perhatian</h2>
+                <p id="modal-message">Pesan di sini.</p>
+                <div class="modal-actions">
+                    <button id="modal-btn-cancel" class="btn-secondary hidden" onclick="closeCustomModal(false)">Batal</button>
+                    <button id="modal-btn-ok" class="btn-primary" onclick="closeCustomModal(true)">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

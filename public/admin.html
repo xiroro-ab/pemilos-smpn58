@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Pemilos SMPN 58 PALEMBANG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div id="admin-app">
+        <!-- Login Admin -->
+        <div id="admin-login-view" class="view active">
+            <div class="card login-card">
+                <img src="https://raw.githubusercontent.com/xiroro-ab/smp58dataguru/refs/heads/main/ico.png" alt="Logo" class="school-logo" style="width: 80px; margin-bottom:10px; animation: float 3s ease-in-out infinite;">
+                <h2>Login Panitia</h2>
+                <p>Masukkan kata sandi panitia</p>
+                <form id="admin-login-form">
+                    <input type="password" id="admin-pwd" placeholder="Password (admin123)" required>
+                    <button type="submit" class="btn">Masuk Dashboard</button>
+                    <div id="admin-error" class="error-msg"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="admin-dashboard-view" class="view hidden">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <h2>Admin Pemilos</h2>
+                <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <div class="overlay" onclick="toggleSidebar()"></div>
+            
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <h2>PEMILOS SMPN 58</h2>
+                </div>
+                <ul>
+                    <li class="active" onclick="switchTab('dashboard', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Dasbor Suara
+                    </li>
+                    <li onclick="switchTab('settings', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Pengaturan Paslon
+                    </li>
+                    <li onclick="switchTab('status', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        Data Pemilih
+                    </li>
+                    <li onclick="switchTab('live', this)">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Live Feed Pemilih
+                    </li>
+                </ul>
+                <button class="btn btn-logout" onclick="location.reload()">Keluar</button>
+            </nav>
+            
+            <main class="content">
+                <!-- Live Stats & Race Arena -->
+                <div id="tab-dashboard" class="tab active">
+                    <header>
+                        <div>
+                            <h1>Dasbor Suara</h1>
+                            <p class="subtitle-dark">Pemantauan hasil pemilihan secara *real-time*.</p>
+                        </div>
+                        <div class="badge live-badge">
+                            <span class="pulse-dot"></span> LIVE UPDATE
+                        </div>
+                    </header>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Pemilih</h3>
+                            <p class="stat-value" id="stat-total">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Suara Masuk</h3>
+                            <p class="stat-value text-success" id="stat-voted">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Partisipasi</h3>
+                            <p class="stat-value text-primary" id="stat-turnout">0%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="race-arena-container">
+                        <div id="race-arena"></div>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="tab-settings" class="tab hidden">
+                    <header>
+                        <div>
+                            <h1>Pengaturan Paslon</h1>
+                            <p class="subtitle-dark">Ubah nama, visi, dan unggah foto paslon langsung dari komputer (Lokal).</p>
+                        </div>
+                    </header>
+                    <div class="settings-container" id="settings-candidates-list"></div>
+                </div>
+                
+                <!-- Manajemen Data Pemilih (Gabungan) -->
+                <div id="tab-status" class="tab hidden">
+                    <header style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+                        <div>
+                            <h1>Manajemen Data Pemilih</h1>
+                            <p class="subtitle-dark">Impor data dari Dapodik dan pantau status pencoblosan.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items:center;">
+                            <button class="btn btn-primary" style="padding:10px 16px; border-radius:6px; font-weight:500;" onclick="openAddVoterModal()">+ Tambah Pemilih</button>
+                            <a href="/template.csv" download class="btn-outline">Unduh Template CSV</a>
+                            <label class="btn btn-outline" for="csv-file" style="cursor:pointer; margin:0; padding:10px 16px; border-radius:6px; font-weight:500; color:var(--text); border-color:var(--border);">Impor Data CSV</label>
+                            <input type="file" id="csv-file" accept=".csv" onchange="previewCSV()" style="display:none;">
+                        </div>
+                    </header>
+                    
+                    <div id="csv-preview-container" class="hidden" style="margin-bottom: 25px; padding: 20px; background: rgba(30,41,59,0.5); border-radius: 12px; border: 1px solid var(--border);">
+                        <h3 style="margin-bottom: 5px; font-size: 1.05rem; color: var(--text);">Pratinjau Data Impor</h3>
+                        <p id="csv-filename" class="subtitle-dark" style="margin-bottom: 15px;">file.csv</p>
+                        <div class="csv-table-wrapper" style="margin-bottom: 15px;">
+                            <table class="csv-table">
+                                <thead>
+                                    <tr><th>ID Pemilih (NISN)</th><th>Nama Pemilih</th><th>Kelas</th></tr>
+                                </thead>
+                                <tbody id="csv-preview-body"></tbody>
+                            </table>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn btn-secondary" onclick="cancelImport()" style="width:auto; padding:10px 20px; margin:0;">Batal</button>
+                            <button class="btn btn-primary" id="btn-import-csv" onclick="importCSV()" style="width:auto; padding:10px 20px; margin:0;">Proses Impor Data</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <select id="class-filter" class="btn" style="width:auto; padding:8px 12px; background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--border);" onchange="renderVoterList()">
+                            <option value="all">Semua Kelas</option>
+                        </select>
+                        <select id="voter-filter" class="btn" style="width:auto; padding:8px 12px; background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--border);" onchange="renderVoterList()">
+                            <option value="all">Semua Status</option>
+                            <option value="voted">Sudah Memilih</option>
+                            <option value="not_voted">Belum Memilih</option>
+                        </select>
+                    </div>
+                    
+                    <div class="csv-table-wrapper" style="background:var(--card); border-radius:12px; border:1px solid var(--border);">
+                        <table class="csv-table" style="margin-top:0; border:none; box-shadow:none;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">ID Pemilih</th>
+                                    <th style="width: 30%;">Nama Pemilih</th>
+                                    <th style="width: 15%;">Kelas/Jabatan</th>
+                                    <th style="width: 20%;">Status</th>
+                                    <th style="width: 15%;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="voter-list-body">
+                                <!-- Diisi via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Live Feed (Internal) -->
+                <div id="tab-live" class="tab hidden">
+                    <header style="margin-bottom:20px;">
+                        <h1>Live Feed Pemilih</h1>
+                        <p class="subtitle-dark">Pantau arus pemilih secara real-time tanpa menampilkan perolehan suara.</p>
+                    </header>
+                    <div class="live-grid">
+                        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+                            <h2 style="font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;">
+                                Sudah Memilih <span style="background: rgba(16,185,129,0.1); color: var(--success); padding: 4px 10px; border-radius: 20px; font-size: 0.9rem;" id="live-voted-count">0</span>
+                            </h2>
+                            <div style="height: 50vh; overflow-y: hidden; position: relative;">
+                                <div class="list-track" id="live-voted-list"></div>
+                            </div>
+                        </div>
+                        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+                            <h2 style="font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;">
+                                Belum Memilih <span style="background: rgba(239,68,68,0.1); color: #ef4444; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem;" id="live-pending-count">0</span>
+                            </h2>
+                            <div style="height: 50vh; overflow-y: hidden; position: relative;">
+                                <div class="list-track" id="live-pending-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <footer class="app-footer">
+                    &copy; 2026 Pemilos SMPN 58 Palembang. All Rights Reserved.<br>
+                    Powered By Aris Bermansyah | Coding Support by Gemini
+                </footer>
+                
+            </main>
+        </div>
+        
+        <!-- Custom Modal Popup -->
+        <div id="custom-modal" class="modal-overlay hidden">
+            <div class="glass-card modal-card">
+                <div id="modal-icon" class="modal-icon"></div>
+                <h2 id="modal-title">Perhatian</h2>
+                <p id="modal-message">Pesan di sini.</p>
+                <div class="modal-actions">
+                    <button id="modal-btn-cancel" class="btn-secondary hidden" onclick="closeCustomModal(false)">Batal</button>
+                    <button id="modal-btn-ok" class="btn-primary" onclick="closeCustomModal(true)">OK</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Form Pemilih -->
+        <div id="voter-modal" class="modal-overlay hidden">
+            <div class="glass-card modal-card" style="text-align:left;">
+                <h2 id="voter-modal-title" style="margin-bottom: 20px;">Tambah Pemilih</h2>
+                <input type="hidden" id="voter-old-nisn">
+                <div class="edit-form">
+                    <label>ID Pemilih (NISN / NIP)</label>
+                    <input type="text" id="voter-nisn" placeholder="Masukkan ID unik">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="voter-name" placeholder="Masukkan nama">
+                    <label>Kelas / Jabatan</label>
+                    <input type="text" id="voter-kelas" placeholder="Contoh: 7A, Guru">
+                </div>
+                <div class="modal-actions" style="margin-top:25px;">
+                    <button class="btn-secondary" onclick="closeVoterModal()">Batal</button>
+                    <button class="btn-primary" id="btn-save-voter" onclick="saveVoter()">Simpan Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>
