@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEMILOS SMPN 58 PALEMBANG</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Barcode+39&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
     <div id="app">
@@ -84,28 +84,34 @@
                 </div>
                 
                 <!-- Identitas -->
-                <div style="padding: 20px 30px; text-align: center; flex-grow: 1;">
+                <div style="padding: 20px 30px 10px 30px; text-align: center; flex-grow: 1;">
                     <h1 id="success-name" style="font-size: 1.6rem; color: #1e293b; margin-bottom: 5px; font-weight: 800; line-height: 1.2;">NAMA SISWA</h1>
-                    <p style="font-size: 1rem; color: #64748b; font-weight: 600; margin-bottom: 25px; letter-spacing: 1px;">Pesta Demokrasi SMPN 58</p>
+                    <p style="font-size: 1rem; color: #64748b; font-weight: 600; margin-bottom: 15px; letter-spacing: 1px;">Pesta Demokrasi SMPN 58</p>
                     
-                    <div style="background: #f8fafc; border-radius: 16px; padding: 15px; border: 2px dashed #cbd5e1; margin-bottom: 20px;">
-                        <span style="font-size: 2rem; display: block; margin-bottom: 5px;">🎉</span>
-                        <p style="color: #334155; font-size: 1rem; margin: 0; font-weight: 600;">Status: <span style="color: var(--success);">SUDAH MEMILIH</span></p>
+                    <!-- Kata-kata kekinian -->
+                    <p style="font-size: 0.95rem; color: var(--primary); font-weight: 700; margin-bottom: 15px; line-height: 1.4;">
+                        SUARA GUE, PENENTU MASA DEPAN!<br>
+                        <span style="color: #64748b; font-weight: 500; font-size: 0.85rem;">Keren abis, lo udah resmi berkontribusi!</span>
+                    </p>
+                    
+                    <div style="background: #f8fafc; border-radius: 16px; padding: 12px; border: 2px dashed #cbd5e1; margin-bottom: 15px;">
+                        <span style="font-size: 1.8rem; display: block; margin-bottom: 5px;">🎉</span>
+                        <p style="color: #334155; font-size: 0.95rem; margin: 0; font-weight: 700;">Status: <span style="color: var(--success);">SUDAH MEMILIH</span></p>
                     </div>
                 </div>
                 
                 <!-- Footer Barcode -->
-                <div style="background: #f1f5f9; padding: 25px 20px; text-align: center; border-top: 1px solid #e2e8f0;">
-                    <div style="font-family: 'Libre Barcode 39', monospace; font-size: 3.5rem; color: #0f172a; letter-spacing: 2px; line-height: 0.8;">*SMPN58VOTED*</div>
+                <div style="background: #f1f5f9; padding: 20px 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+                    <div style="font-family: 'Libre Barcode 39', monospace; font-size: 2.8rem; color: #0f172a; letter-spacing: 1px; line-height: 0.8; overflow: hidden;">*SMPN58VOTED*</div>
                     <p style="font-size: 0.7rem; color: #94a3b8; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 2px;">Valid E-Voting Record - 2026</p>
                 </div>
             </div>
             
             <div style="margin-top: 30px; text-align: center; max-width: 380px; margin-left: auto; margin-right: auto;">
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px;">📸 Simpan ID Card ini ke Galeri HP kamu!</p>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-secondary" onclick="downloadBadge()" style="flex: 1; font-size: 1rem; padding: 14px; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);">⬇️ Simpan Card</button>
-                    <button class="btn-primary" onclick="location.reload()" style="flex: 1; font-size: 1rem; padding: 14px; border-radius: 12px; background: linear-gradient(90deg, var(--primary), #8b5cf6); font-weight: 600; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);">Selesai 🚪</button>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px;">📸 Pamerin ke teman-temanmu di Instagram/WA Story!</p>
+                <div style="display: flex; gap: 10px; align-items: stretch;">
+                    <button class="btn-secondary" onclick="downloadBadge()" style="flex: 1; font-size: 1rem; padding: 14px 0; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); height: 52px; display: flex; align-items: center; justify-content: center; gap: 8px;">⬇️ Simpan Card</button>
+                    <button class="btn-primary" onclick="location.reload()" style="flex: 1; font-size: 1rem; padding: 14px 0; border-radius: 12px; background: linear-gradient(90deg, var(--primary), #8b5cf6); font-weight: 600; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); height: 52px; display: flex; align-items: center; justify-content: center; gap: 8px;">Selesai 🚪</button>
                 </div>
             </div>
         </div>
@@ -136,6 +142,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=2"></script>
 </body>
 </html>

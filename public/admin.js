@@ -60,6 +60,7 @@ async function fetchDashboardData() {
         document.getElementById('stat-turnout').textContent = data.stats.turnout + '%';
         
         highestVoteGlobal = Math.max(...data.candidates.map(c => c.votes), 1); 
+        globalCandidates = data.candidates;
         
         updateRaceArena(data.candidates, data.stats.total);
         
