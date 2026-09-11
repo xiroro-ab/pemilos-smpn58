@@ -240,16 +240,14 @@ window.updateAvatarImage = function() {
     }
     let seed = window.currentAvatarIsFemale ? nameToUse + " Princess" : nameToUse + " Hero";
     let hairStyle = window.currentAvatarIsFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
-    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}&r=${new Date().getTime()}`;
+    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(seed)}&top=${hairStyle}&size=512`;
+    
+    console.log("🔄 Mengganti Avatar... Gender Perempuan:", window.currentAvatarIsFemale);
+    console.log("🔗 URL Avatar Baru:", avatarUrl);
     
     const avatarImg = document.getElementById('voter-avatar');
     if (avatarImg) {
-        // Force browser repaint/reflow (Fixes mobile/Safari bug where SVG with CSS filters don't update visually)
-        avatarImg.style.display = 'none';
         avatarImg.src = avatarUrl;
-        avatarImg.offsetHeight; // trigger reflow
-        avatarImg.style.display = '';
-        
         avatarImg.style.transform = 'scale(1.15) translateY(-6%)';
     }
 };
