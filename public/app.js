@@ -168,9 +168,11 @@ function castVote(candidateId, candidateName) {
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Micah style dari DiceBear (Penuh warna, premium, sampai dada/bahu)
+                // Menggunakan Avataaars style dari DiceBear (Penuh warna, sampai dada)
+                // Memaksa gender dari model rambut agar pria tidak menjadi wanita
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(seed)}`;
+                let hairStyle = isFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
+                let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
