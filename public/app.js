@@ -168,9 +168,9 @@ function castVote(candidateId, candidateName) {
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Micah style dari DiceBear (Ilustrasi karakter premium)
+                // Menggunakan Micah style dari DiceBear (Transparan agar menyatu dengan card 3D)
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+                let avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(seed)}`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
