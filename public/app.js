@@ -170,9 +170,7 @@ function castVote(candidateId, candidateName) {
                 
                 // Menggunakan Avataaars style dari DiceBear (Karakter sampai perut)
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let top = isFemale ? 'longHair,straight01,straight02,curvy' : 'shortHair,frizzle,dreads,shortHairShortWaved';
-                let clothing = isFemale ? 'blazerAndShirt,collarAndSweater' : 'blazerAndSweater,hoodie';
-                let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${top}&clothing=${clothing}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+                let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
