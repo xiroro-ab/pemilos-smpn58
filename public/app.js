@@ -1,5 +1,7 @@
 // Global State
 let currentUser = null;
+let finalVoterName = ''; // To persist name for avatar toggle after session is cleared
+let currentCandidates = [];
 
 // DOM Elements
 const views = {
@@ -163,10 +165,11 @@ function castVote(candidateId, candidateName) {
             
             if (data.success) {
                 elements.successName.textContent = currentUser.name;
+                finalVoterName = currentUser.name; // Save name before session is cleared
                 
                 // Deteksi Gender Sederhana untuk Avatar
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba', 'zeren'];
-                window.currentAvatarIsFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
+                window.currentAvatarIsFemale = femaleKeywords.some(keyword => finalVoterName.toLowerCase().includes(keyword));
                 
                 window.updateAvatarImage();
                 
@@ -230,11 +233,12 @@ window.logoutStudent = function() {
 
 // Define avatar update functions in global scope
 window.updateAvatarImage = function() {
-    if (!currentUser) {
-        console.error("updateAvatarImage failed: currentUser is null");
+    const nameToUse = currentUser ? currentUser.name : finalVoterName;
+    if (!nameToUse) {
+        console.error("updateAvatarImage failed: no name found");
         return;
     }
-    let seed = window.currentAvatarIsFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
+    let seed = window.currentAvatarIsFemale ? nameToUse + " Princess" : nameToUse + " Hero";
     let hairStyle = window.currentAvatarIsFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
     let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}&r=${new Date().getTime()}`;
     
