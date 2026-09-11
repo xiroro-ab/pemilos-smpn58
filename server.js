@@ -66,6 +66,33 @@ app.get('/api/admin/clean', async (req, res) => {
     res.json({ success: true, message: 'Database cleaned!' });
 });
 
+// API: Reset Database (Hari-H)
+app.post('/api/admin/reset-database', async (req, res) => {
+    try {
+        // Reset Students
+        const { data: students } = await supabase.from('students').select('nisn');
+        if (students && students.length > 0) {
+            const studentIds = students.map(s => s.nisn);
+            await supabase.from('students').update({ hasVoted: false, votedAt: null }).in('nisn', studentIds);
+        }
+        
+        // Reset Candidates
+        const { data: candidates } = await supabase.from('candidates').select('id');
+        if (candidates && candidates.length > 0) {
+            const candidateIds = candidates.map(c => c.id);
+            await supabase.from('candidates').update({ votes: 0 }).in('id', candidateIds);
+        }
+        
+        // Clear Activity Logs
+        await supabase.from('activity_logs').delete().neq('id', 0);
+        
+        res.json({ success: true, message: 'Database berhasil di-reset untuk Hari-H Pemilos!' });
+    } catch (error) {
+        console.error('Reset Database Error:', error);
+        res.status(500).json({ success: false, message: 'Gagal mereset database: ' + error.message });
+    }
+});
+
 // API: Submit Vote (Transaction)
 app.post('/api/vote', async (req, res) => {
     const { nisn, candidateId } = req.body;

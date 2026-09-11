@@ -744,6 +744,36 @@ function deleteVoter(nisn) {
     });
 }
 
+function confirmResetDatabase() {
+    showCustomConfirm(
+        '⚠️ RESET DATABASE UNTUK HARI-H?', 
+        'TINDAKAN INI SANGAT BERBAHAYA!\n\nSemua suara kandidat akan dikembalikan menjadi 0.\nStatus semua siswa akan di-reset menjadi BELUM MEMILIH.\nLog aktivitas akan dihapus sepenuhnya.\n\nApakah Anda YAKIN 100% ingin mereset database untuk Hari-H Pemilos?', 
+        async (confirmed) => {
+            if (!confirmed) return;
+            
+            // Double confirmation for safety
+            const p = prompt('Ketik "RESET" (tanpa tanda kutip) untuk melanjutkan konfirmasi terakhir:');
+            if (p !== 'RESET') {
+                showCustomAlert('Dibatalkan', 'Proses reset dibatalkan karena kata kunci salah.');
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/admin/reset-database', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    showCustomAlert('Sukses Besar!', data.message);
+                    fetchDashboardData(); // Refresh UI
+                } else {
+                    showCustomAlert('Gagal', data.message, true);
+                }
+            } catch(err) {
+                showCustomAlert('Kesalahan', 'Gagal menghubungi server. Periksa koneksi internet.', true);
+            }
+        }
+    );
+}
+
 // --- Custom Modal System ---
 let modalCallback = null;
 function showCustomAlert(title, message, isError = false) {
