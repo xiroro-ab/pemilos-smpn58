@@ -168,16 +168,23 @@ select option {
 }
 
 /* Custom Modal & Animation Styles */
-.school-logo { width: 80px; margin-bottom: 15px; }
-.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; transition: opacity 0.2s ease; backdrop-filter: blur(4px); }
+.school-logo { width: 80px; margin-bottom: 15px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; transition: opacity 0.3s ease; }
 .modal-overlay.hidden { opacity: 0; pointer-events: none; }
-.modal-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: scale(1); transition: transform 0.2s ease-out; }
-.modal-overlay.hidden .modal-card { transform: scale(0.95); }
-.modal-icon { display: flex; justify-content: center; margin-bottom: 15px; color: var(--text); }
-.modal-card h2 { color: var(--text); font-size: 1.25rem; margin-bottom: 10px; font-weight: 600; }
-.modal-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px; }
-.modal-actions { display: flex; gap: 10px; justify-content: center; }
-.modal-actions button { flex: 1; padding: 10px; border-radius: 6px; }
+.modal-card { background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 35px 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(79, 70, 229, 0.3); transform: scale(1); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal-overlay.hidden .modal-card { transform: scale(0.8); }
+.modal-icon { display: flex; justify-content: center; margin-bottom: 15px; color: var(--text); animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.modal-card h2 { color: white; font-size: 1.5rem; margin-bottom: 10px; font-weight: 600; }
+.modal-card p { color: #94A3B8; font-size: 1rem; line-height: 1.5; margin-bottom: 25px; }
+.modal-actions { display: flex; gap: 15px; justify-content: center; }
+.modal-actions button { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.modal-actions .btn-primary { background: #4F46E5; color: white; margin-top: 0 !important; }
+.modal-actions .btn-primary:hover { background: #4338CA; transform: translateY(-2px); }
+.modal-actions .btn-secondary { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: white; margin-top: 0 !important; }
+.modal-actions .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
 
 /* Print Styles */
 @media print {
