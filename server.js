@@ -246,3 +246,5 @@ app.delete('/api/admin/delete-voter/:nisn', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server E-Voting Pemilos berjalan di http://localhost:${PORT}`);
 });
+
+module.exports = app;
