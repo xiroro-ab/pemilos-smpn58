@@ -156,15 +156,20 @@ select option {
 
 /* Print Styles */
 @media print {
-    body { background: white !important; color: black !important; }
-    .sidebar, .mobile-header, header .btn-print, header .badge { display: none !important; }
+    body, #app, .content { background: white !important; color: black !important; }
+    .sidebar, .mobile-header, header .btn-print, header .badge, .overlay { display: none !important; }
     .content { padding: 0 !important; margin: 0 !important; }
     #admin-dashboard-view { display: block !important; }
+    
+    header h1, header p { color: black !important; }
+    
     .stats-grid { display: flex; gap: 20px; margin-bottom: 40px; }
-    .stat-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; color: black !important; padding: 15px !important; flex: 1; }
-    .race-arena { background: white !important; border: 1px solid #ccc !important; padding: 20px !important; box-shadow: none !important; }
-    .pillar-score { color: black !important; }
-    .pillar-name { color: black !important; }
+    .stat-card { background: white !important; border: 2px solid #000 !important; box-shadow: none !important; padding: 15px !important; flex: 1; }
+    .stat-card h3, .stat-card p { color: black !important; }
+    
+    .race-arena-container { background: white !important; border: 2px solid #000 !important; padding: 20px !important; box-shadow: none !important; }
+    
+    .pillar-score, .pillar-name { color: black !important; }
     .pillar-bar { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
     .app-footer { display: none !important; }
 }
