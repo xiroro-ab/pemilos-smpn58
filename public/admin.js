@@ -180,7 +180,28 @@ function previewFile(id) {
         nameDisplay.textContent = file.name;
         
         const reader = new FileReader();
-        reader.onload = (e) => { previewImg.src = e.target.result; };
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const MAX_SIZE = 600; // Avatars can be smaller
+                if (width > height && width > MAX_SIZE) {
+                    height *= MAX_SIZE / width;
+                    width = MAX_SIZE;
+                } else if (height > MAX_SIZE) {
+                    width *= MAX_SIZE / height;
+                    height = MAX_SIZE;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                previewImg.src = canvas.toDataURL('image/jpeg', 0.6);
+            };
+            img.src = e.target.result;
+        };
         reader.readAsDataURL(file);
     }
 }
@@ -195,9 +216,30 @@ function previewPoster(id) {
         nameDisplay.textContent = file.name;
         
         const reader = new FileReader();
-        reader.onload = (e) => { 
-            previewImg.src = e.target.result; 
-            previewImg.style.display = 'block';
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                // Max width/height 1200px
+                const MAX_SIZE = 1200;
+                if (width > height && width > MAX_SIZE) {
+                    height *= MAX_SIZE / width;
+                    width = MAX_SIZE;
+                } else if (height > MAX_SIZE) {
+                    width *= MAX_SIZE / height;
+                    height = MAX_SIZE;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Compress to JPEG with 0.6 quality (reduces size drastically)
+                previewImg.src = canvas.toDataURL('image/jpeg', 0.6);
+                previewImg.style.display = 'block';
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
