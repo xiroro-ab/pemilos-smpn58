@@ -250,11 +250,13 @@ window.logoutStudent = function() {
 
 // Download Ticket as Image
 window.downloadBadge = function() {
-    const badgeElement = document.querySelector('#success-view > div');
+    const badgeElement = document.getElementById('id-card-element');
+    const hintElement = document.getElementById('avatar-hint');
     
     if (typeof html2canvas !== 'undefined') {
         const originalRadius = badgeElement.style.borderRadius;
         badgeElement.style.borderRadius = '0';
+        if (hintElement) hintElement.style.display = 'none';
         
         html2canvas(badgeElement, {
             scale: 2,
@@ -262,6 +264,7 @@ window.downloadBadge = function() {
             logging: false
         }).then(canvas => {
             badgeElement.style.borderRadius = originalRadius;
+            if (hintElement) hintElement.style.display = 'block';
             
             const link = document.createElement('a');
             link.download = 'Voter-Pass-' + (currentUser ? currentUser.nisn : 'Pemilos') + '.png';
