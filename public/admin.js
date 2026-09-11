@@ -319,56 +319,109 @@ async function fetchVoterList() {
     }
 }
 
+let lastSeenActivityId = 0;
+let liveCarouselInterval = null;
+let currentCarouselIndex = 0;
+
 async function renderLiveFeed() {
-    const container = document.getElementById('live-activities-list');
-    if (!container) return;
+    const track = document.getElementById('live-activities-track');
+    if (!track) return;
     
     // Jangan perbarui DOM jika tab live tidak aktif (hemat kinerja)
-    if (!document.getElementById('tab-live').classList.contains('active')) return;
+    if (!document.getElementById('tab-live').classList.contains('active')) {
+        if (liveCarouselInterval) {
+            clearInterval(liveCarouselInterval);
+            liveCarouselInterval = null;
+        }
+        return;
+    }
+    
+    // Start carousel if not started
+    if (!liveCarouselInterval && globalCandidates.length > 0) {
+        updateCarousel();
+        liveCarouselInterval = setInterval(updateCarousel, 10000);
+    }
     
     try {
         const res = await fetch('/api/admin/activities');
         const data = await res.json();
         
         if (data.success && data.data.length > 0) {
-            let html = '';
-            data.data.forEach((act, index) => {
+            // Urutkan ascending agar yang tertua dari batch baru diproses dulu
+            const newActivities = data.data.filter(a => a.id > lastSeenActivityId).sort((a,b) => a.id - b.id);
+            
+            newActivities.forEach((act) => {
+                lastSeenActivityId = Math.max(lastSeenActivityId, act.id);
+                
                 const time = new Date(act.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 
-                // Animasi cascade untuk efek muncul
-                const delay = index * 0.1;
+                const item = document.createElement('div');
+                item.className = 'danmaku-item';
+                
+                // Posisi Y Acak antara 10% dan 80%
+                const topPos = Math.floor(Math.random() * 70) + 10;
+                item.style.top = `${topPos}%`;
+                
+                // Durasi animasi acak agar bervariasi (12s - 18s)
+                const duration = Math.floor(Math.random() * 6) + 12;
+                item.style.animationDuration = `${duration}s`;
                 
                 if (act.action === 'LOGIN') {
-                    html += `
-                        <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px 20px; border-radius: 8px; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease-out forwards; opacity: 0; animation-delay: ${delay}s;">
-                            <span style="font-size: 2rem;">👋</span>
-                            <div>
-                                <strong style="font-size: 1.2rem; color: #60a5fa;">${act.student_name}</strong>
-                                <span style="color: var(--text-muted); font-size: 1.1rem;"> baru saja memasuki bilik suara rahasia!</span>
-                            </div>
-                            <span style="margin-left: auto; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                    item.style.borderColor = '#3b82f6';
+                    item.innerHTML = `
+                        <span style="font-size: 2rem;">👋</span>
+                        <div>
+                            <strong style="font-size: 1.2rem; color: #60a5fa;">${act.student_name}</strong>
+                            <span style="color: white; font-size: 1.1rem;"> baru saja memasuki bilik suara!</span>
                         </div>
+                        <span style="margin-left: 10px; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
                     `;
                 } else if (act.action === 'VOTE') {
-                    html += `
-                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 15px 20px; border-radius: 8px; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease-out forwards; opacity: 0; animation-delay: ${delay}s;">
-                            <span style="font-size: 2rem;">🗳️</span>
-                            <div>
-                                <strong style="font-size: 1.2rem; color: #34d399;">${act.student_name}</strong>
-                                <span style="color: var(--text-muted); font-size: 1.1rem;"> telah resmi menggunakan hak pilihnya!</span>
-                            </div>
-                            <span style="margin-left: auto; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                    item.style.borderColor = '#10b981';
+                    item.innerHTML = `
+                        <span style="font-size: 2rem;">🗳️</span>
+                        <div>
+                            <strong style="font-size: 1.2rem; color: #34d399;">${act.student_name}</strong>
+                            <span style="color: white; font-size: 1.1rem;"> resmi menggunakan hak pilihnya!</span>
                         </div>
+                        <span style="margin-left: 10px; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
                     `;
                 }
+                
+                track.appendChild(item);
+                
+                // Hapus elemen dari DOM setelah animasi selesai
+                setTimeout(() => {
+                    if (item.parentNode) item.parentNode.removeChild(item);
+                }, duration * 1000);
             });
-            container.innerHTML = html;
-        } else {
-            container.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-style: italic; font-size: 1.2rem;">Menunggu aktivitas pemilih...</div>`;
         }
     } catch(err) {
         console.error("Gagal mengambil live feed");
     }
+}
+
+function updateCarousel() {
+    const bgContainer = document.getElementById('live-carousel-bg');
+    const contentContainer = document.getElementById('live-carousel-content');
+    if (!bgContainer || !contentContainer || globalCandidates.length === 0) return;
+    
+    const c = globalCandidates[currentCarouselIndex];
+    
+    // Fade out
+    bgContainer.style.opacity = '0';
+    
+    setTimeout(() => {
+        contentContainer.innerHTML = `
+            <img src="${c.image}" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=250&bold=true'" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 20px; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4);">
+            <h2 style="font-size: 3rem; color: white; margin-bottom: 15px; text-shadow: 0 0 20px rgba(0,0,0,0.8);">Paslon 0${c.id}: ${c.name}</h2>
+            <p style="font-size: 1.5rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6; font-style: italic;">"${c.vision}"</p>
+        `;
+        // Fade in
+        bgContainer.style.opacity = '0.7';
+        
+        currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
+    }, 1000);
 }
 
 function populateClassFilter() {

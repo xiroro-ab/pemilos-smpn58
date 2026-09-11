@@ -133,6 +133,26 @@ select option {
     to { transform: translateX(0); opacity: 1; }
 }
 
+@keyframes danmakuWalk {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100vw); }
+}
+
+.danmaku-item {
+    position: absolute;
+    white-space: nowrap;
+    animation: danmakuWalk 15s linear forwards;
+    padding: 15px 30px;
+    border-radius: 50px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
 @media (max-width: 900px) {
     .live-grid { grid-template-columns: 1fr; }
     #admin-dashboard-view { flex-direction: column; }

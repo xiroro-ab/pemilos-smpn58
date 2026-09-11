@@ -170,14 +170,22 @@
                 </div>
                 
                 <!-- Live Feed (Internal) -->
-                <div id="tab-live" class="tab hidden" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
-                    <header style="margin-bottom:40px; text-align: center;">
-                        <h1 style="font-size: 3rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px rgba(79, 70, 229, 0.5);">Pesta Demokrasi SMPN 58</h1>
-                        <p class="subtitle-dark" style="font-size: 1.5rem;">Pantau antusiasme pemilih secara langsung!</p>
+                <div id="tab-live" class="tab hidden" style="height: 100%; display: flex; flex-direction: column;">
+                    <header style="margin-bottom:20px; text-align: center; z-index: 10;">
+                        <h1 style="font-size: 2.5rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px rgba(79, 70, 229, 0.5);">Pesta Demokrasi SMPN 58</h1>
                     </header>
-                    <div style="flex-grow: 1; background: rgba(15, 23, 42, 0.8); border: 2px solid var(--primary); border-radius: 20px; padding: 40px; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(79, 70, 229, 0.2);">
-                        <div id="live-activities-list" style="display: flex; flex-direction: column; gap: 20px;">
-                            <div style="text-align:center; color: var(--text-muted); font-style: italic; font-size: 1.2rem;">Menunggu aktivitas pemilih...</div>
+                    
+                    <div style="flex-grow: 1; position: relative; border-radius: 20px; overflow: hidden; background: rgba(15, 23, 42, 0.9); border: 2px solid var(--border); box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);">
+                        <!-- Background Carousel for Candidate Vision -->
+                        <div id="live-carousel-bg" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; opacity: 0.3; z-index: 1; padding: 40px; text-align: center; transition: opacity 1s ease-in-out;">
+                            <div id="live-carousel-content">
+                                <h2 style="font-size: 2rem; color: white; margin-bottom: 20px;">Menyiapkan Panggung...</h2>
+                            </div>
+                        </div>
+                        
+                        <!-- Danmaku Container (Bullet Screen) -->
+                        <div id="live-activities-track" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10; pointer-events: none; overflow: hidden;">
+                            <!-- Danmaku items will be injected here -->
                         </div>
                     </div>
                 </div>
