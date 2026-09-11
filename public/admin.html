@@ -120,7 +120,7 @@
                             <a href="/template.csv" download class="btn-outline">Unduh Template CSV</a>
                             <label class="btn btn-outline" for="csv-file" style="cursor:pointer; margin:0; padding:10px 16px; border-radius:6px; font-weight:500; color:var(--text); border-color:var(--border);">Impor Data CSV</label>
                             <input type="file" id="csv-file" accept=".csv" onchange="previewCSV()" style="display:none;">
-                            <button class="btn btn-primary" style="padding:10px 16px; border-radius:6px; font-weight:500; background:var(--danger); border-color:var(--danger);" onclick="confirmResetDatabase()">⚠️ Reset Hari-H</button>
+                            <button class="btn btn-primary" style="padding:10px 16px; border-radius:6px; font-weight:500; background:#ef4444; border-color:#ef4444;" onclick="confirmResetDatabase()">⚠️ Reset Hari-H</button>
                         </div>
                     </header>
                     
@@ -205,6 +205,7 @@
                 <div id="modal-icon" class="modal-icon"></div>
                 <h2 id="modal-title">Perhatian</h2>
                 <p id="modal-message">Pesan di sini.</p>
+                <input type="text" id="modal-input" class="hidden" style="width:100%; margin-top:15px; padding:12px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--text); border-radius:6px; text-align:center;" placeholder="Ketik di sini...">
                 <div class="modal-actions">
                     <button id="modal-btn-cancel" class="btn-secondary hidden" onclick="closeCustomModal(false)">Batal</button>
                     <button id="modal-btn-ok" class="btn-primary" onclick="closeCustomModal(true)">OK</button>
@@ -235,6 +236,6 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="admin.js?v=2"></script>
+    <script src="admin.js?v=3"></script>
 </body>
 </html>

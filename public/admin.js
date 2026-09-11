@@ -748,28 +748,33 @@ function confirmResetDatabase() {
     showCustomConfirm(
         '⚠️ RESET DATABASE UNTUK HARI-H?', 
         'TINDAKAN INI SANGAT BERBAHAYA!\n\nSemua suara kandidat akan dikembalikan menjadi 0.\nStatus semua siswa akan di-reset menjadi BELUM MEMILIH.\nLog aktivitas akan dihapus sepenuhnya.\n\nApakah Anda YAKIN 100% ingin mereset database untuk Hari-H Pemilos?', 
-        async (confirmed) => {
+        (confirmed) => {
             if (!confirmed) return;
             
-            // Double confirmation for safety
-            const p = prompt('Ketik "RESET" (tanpa tanda kutip) untuk melanjutkan konfirmasi terakhir:');
-            if (p !== 'RESET') {
-                showCustomAlert('Dibatalkan', 'Proses reset dibatalkan karena kata kunci salah.');
-                return;
-            }
-            
-            try {
-                const res = await fetch('/api/admin/reset-database', { method: 'POST' });
-                const data = await res.json();
-                if (data.success) {
-                    showCustomAlert('Sukses Besar!', data.message);
-                    fetchDashboardData(); // Refresh UI
-                } else {
-                    showCustomAlert('Gagal', data.message, true);
+            // Double confirmation via custom prompt
+            showCustomPrompt(
+                'Konfirmasi Terakhir',
+                'Ketik "RESET" (tanpa tanda kutip) huruf besar semua untuk mengeksekusi reset:',
+                async (inputValue) => {
+                    if (inputValue !== 'RESET') {
+                        showCustomAlert('Dibatalkan', 'Proses reset dibatalkan karena kata kunci salah.');
+                        return;
+                    }
+                    
+                    try {
+                        const res = await fetch('/api/admin/reset-database', { method: 'POST' });
+                        const data = await res.json();
+                        if (data.success) {
+                            showCustomAlert('Sukses Besar!', data.message);
+                            fetchDashboardData(); // Refresh UI
+                        } else {
+                            showCustomAlert('Gagal', data.message, true);
+                        }
+                    } catch(err) {
+                        showCustomAlert('Kesalahan', 'Gagal menghubungi server. Periksa koneksi internet.', true);
+                    }
                 }
-            } catch(err) {
-                showCustomAlert('Kesalahan', 'Gagal menghubungi server. Periksa koneksi internet.', true);
-            }
+            );
         }
     );
 }
@@ -784,6 +789,7 @@ function showCustomAlert(title, message, isError = false) {
         : `<svg width="48" height="48" fill="none" stroke="#10b981" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
     document.getElementById('modal-icon').innerHTML = iconHtml;
     document.getElementById('modal-btn-cancel').classList.add('hidden');
+    document.getElementById('modal-input').classList.add('hidden');
     document.getElementById('custom-modal').classList.remove('hidden');
     modalCallback = null;
 }
@@ -792,13 +798,35 @@ function showCustomConfirm(title, message, callback) {
     document.getElementById('modal-message').textContent = message;
     document.getElementById('modal-icon').innerHTML = `<svg width="48" height="48" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
     document.getElementById('modal-btn-cancel').classList.remove('hidden');
+    document.getElementById('modal-input').classList.add('hidden');
     document.getElementById('custom-modal').classList.remove('hidden');
+    modalCallback = callback;
+}
+function showCustomPrompt(title, message, callback) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
+    document.getElementById('modal-icon').innerHTML = `<svg width="48" height="48" fill="none" stroke="#3b82f6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
+    document.getElementById('modal-btn-cancel').classList.remove('hidden');
+    
+    const inputEl = document.getElementById('modal-input');
+    inputEl.value = '';
+    inputEl.classList.remove('hidden');
+    
+    document.getElementById('custom-modal').classList.remove('hidden');
+    inputEl.focus();
     modalCallback = callback;
 }
 window.closeCustomModal = function(isConfirm) {
     document.getElementById('custom-modal').classList.add('hidden');
+    
+    let result = isConfirm;
+    const inputEl = document.getElementById('modal-input');
+    if (!inputEl.classList.contains('hidden') && isConfirm) {
+        result = inputEl.value;
+    }
+    
     if (modalCallback) {
-        modalCallback(isConfirm);
+        modalCallback(result);
         modalCallback = null;
     }
 }
