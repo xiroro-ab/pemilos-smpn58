@@ -84,12 +84,12 @@
                     <div style="position: absolute; top: 15%; bottom: 5%; left: 12%; right: 12%; background: #041222; border-radius: 25px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); z-index: 1;"></div>
                     
                     <!-- The Avatar (Transparan, skala diperbesar) -->
-                    <img id="voter-avatar" src="" alt="Avatar" onclick="toggleAvatarGender()" title="Klik untuk mengubah avatar (Laki-laki / Perempuan)" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.15) translateY(-6%); object-fit: contain; cursor: pointer; transition: transform 0.2s;">
+                    <img id="voter-avatar" src="" alt="Avatar" title="Klik untuk mengubah avatar (Laki-laki / Perempuan)" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.15) translateY(-6%); object-fit: contain; cursor: pointer; transition: transform 0.2s;">
                 </div>
                 
                 <!-- Petunjuk klik avatar -->
                 <div id="avatar-hint" style="text-align: center; margin-top: -10px; margin-bottom: 20px; position: relative; z-index: 4;">
-                    <span style="font-size: 0.65rem; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="toggleAvatarGender()">🔄 Klik foto/teks ini jika gender avatar tidak sesuai</span>
+                    <span style="font-size: 0.65rem; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;">🔄 Klik foto/teks ini jika gender avatar tidak sesuai</span>
                 </div>
                 
                 <!-- Identitas & Barcode -->
@@ -116,10 +116,9 @@
             
             <div style="margin-top: 35px; text-align: center; max-width: 400px; margin-left: auto; margin-right: auto;">
                 <div style="background: rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 50px; display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
-                    <p style="color: white; font-size: 0.95rem; margin: 0; font-weight: 600;">✨ Wajib pamerin ID Card ini ke IG/WA Story! ✨</p>
+                    <p style="color: white; font-size: 0.95rem; margin: 0; font-weight: 600;">✨ Screenshot layar (Tangkapan Layar) pamerin ke IG/WA Story! ✨</p>
                 </div>
                 <div style="display: flex; gap: 15px; justify-content: center; padding: 0 10px; width: 100%; box-sizing: border-box;">
-                    <button onclick="downloadBadge()" style="flex: 1; width: 100%; font-size: 1rem; padding: 0; border-radius: 14px; font-weight: 700; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.4); height: 56px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 2px solid rgba(255,255,255,0.2); background: rgba(30, 41, 59, 0.8); color: white; backdrop-filter: blur(5px); cursor: pointer;">⬇️ Simpan Card</button>
                     <button onclick="location.reload()" style="flex: 1; width: 100%; font-size: 1rem; padding: 0; border-radius: 14px; background: linear-gradient(135deg, var(--primary) 0%, #ec4899 100%); color: white; font-weight: 700; box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.5); height: 56px; display: flex; align-items: center; justify-content: center; gap: 10px; border: none; cursor: pointer;">Selesai 🚪</button>
                 </div>
             </div>
@@ -150,7 +149,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
 </body>
 </html>

@@ -236,12 +236,11 @@ window.updateAvatarImage = function() {
     }
     let seed = window.currentAvatarIsFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
     let hairStyle = window.currentAvatarIsFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
-    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(seed)}&top=${hairStyle}`;
+    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${hairStyle}`;
     
     const avatarImg = document.getElementById('voter-avatar');
     if (avatarImg) {
         avatarImg.src = avatarUrl;
-        // Ensure scale is correct in case it was stuck
         avatarImg.style.transform = 'scale(1.15) translateY(-6%)';
     }
 };
@@ -251,47 +250,10 @@ window.toggleAvatarGender = function() {
     window.updateAvatarImage();
 };
 
-// Download Ticket as Image
-window.downloadBadge = function() {
-    const badgeElement = document.getElementById('id-card-element');
-    const hintElement = document.getElementById('avatar-hint');
+document.addEventListener('DOMContentLoaded', () => {
     const avatarImg = document.getElementById('voter-avatar');
+    if (avatarImg) avatarImg.addEventListener('click', window.toggleAvatarGender);
     
-    if (typeof html2canvas !== 'undefined') {
-        const originalRadius = badgeElement.style.borderRadius;
-        badgeElement.style.borderRadius = '0'; // Prevent corner artifacts
-        
-        if (hintElement) hintElement.style.display = 'none';
-        
-        // Remove filter temporarily for html2canvas (fixes disappear bug)
-        const originalFilter = avatarImg ? avatarImg.style.filter : '';
-        if (avatarImg) avatarImg.style.filter = 'none';
-        
-        html2canvas(badgeElement, {
-            scale: 2,
-            backgroundColor: '#022340',
-            useCORS: true,
-            allowTaint: true,
-            logging: false
-        }).then(canvas => {
-            badgeElement.style.borderRadius = originalRadius;
-            if (hintElement) hintElement.style.display = 'block';
-            if (avatarImg) avatarImg.style.filter = originalFilter;
-            
-            const link = document.createElement('a');
-            link.download = 'Voter-Pass-' + (currentUser ? currentUser.nisn : 'Pemilos') + '.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
-            console.error('Gagal membuat screenshot:', err);
-            alert('Maaf, fitur simpan gambar tidak didukung di perangkat ini.');
-            
-            // Restore elements on error
-            badgeElement.style.borderRadius = originalRadius;
-            if (hintElement) hintElement.style.display = 'block';
-            if (avatarImg) avatarImg.style.filter = originalFilter;
-        });
-    } else {
-        alert('Library screenshot belum termuat sempurna. Silakan screenshot manual.');
-    }
-}
+    const hintElement = document.querySelector('#avatar-hint span');
+    if (hintElement) hintElement.addEventListener('click', window.toggleAvatarGender);
+});
