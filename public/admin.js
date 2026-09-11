@@ -564,7 +564,7 @@ function updateCarousel() {
             contentHTML = `
                 <img src="${c.vision_poster}" style="width: 800px; max-width: 90vw; border-radius: 20px; object-fit: contain; border: 4px solid var(--primary); margin-bottom: 20px; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); max-height: 70vh;">
             `;
-            displayDuration = 30000; // 30 detik untuk poster
+            displayDuration = 15000; // 15 detik untuk poster
             bgContainer.style.opacity = '0.7';
         } else {
             // 3. Fallback ke Tampilan Standar

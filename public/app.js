@@ -168,9 +168,9 @@ function castVote(candidateId, candidateName) {
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Lorelei style dari DiceBear (Cute characters)
+                // Menggunakan Adventurer style dari DiceBear (Karakter full)
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let avatarUrl = `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(seed)}`;
+                let avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
