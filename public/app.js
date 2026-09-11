@@ -164,6 +164,34 @@ function castVote(candidateId, candidateName) {
             if (data.success) {
                 elements.successName.textContent = currentUser.name;
                 showView('success');
+                
+                // Fire Confetti 🎉
+                if (typeof confetti === 'function') {
+                    const duration = 3000;
+                    const end = Date.now() + duration;
+
+                    (function frame() {
+                        confetti({
+                            particleCount: 5,
+                            angle: 60,
+                            spread: 55,
+                            origin: { x: 0 },
+                            colors: ['#3b82f6', '#10b981', '#f59e0b']
+                        });
+                        confetti({
+                            particleCount: 5,
+                            angle: 120,
+                            spread: 55,
+                            origin: { x: 1 },
+                            colors: ['#3b82f6', '#10b981', '#f59e0b']
+                        });
+
+                        if (Date.now() < end) {
+                            requestAnimationFrame(frame);
+                        }
+                    }());
+                }
+                
                 currentUser = null; // Clear session
             } else {
                 showCustomAlert('Transaksi Ditolak', data.message, true);

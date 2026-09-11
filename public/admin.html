@@ -170,27 +170,14 @@
                 </div>
                 
                 <!-- Live Feed (Internal) -->
-                <div id="tab-live" class="tab hidden">
-                    <header style="margin-bottom:20px;">
-                        <h1>Live Feed Pemilih</h1>
-                        <p class="subtitle-dark">Pantau arus pemilih secara real-time tanpa menampilkan perolehan suara.</p>
+                <div id="tab-live" class="tab hidden" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
+                    <header style="margin-bottom:40px; text-align: center;">
+                        <h1 style="font-size: 3rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px rgba(79, 70, 229, 0.5);">Pesta Demokrasi SMPN 58</h1>
+                        <p class="subtitle-dark" style="font-size: 1.5rem;">Pantau antusiasme pemilih secara langsung!</p>
                     </header>
-                    <div class="live-grid">
-                        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-                            <h2 style="font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                Sudah Memilih <span style="background: rgba(16,185,129,0.1); color: var(--success); padding: 4px 10px; border-radius: 20px; font-size: 0.9rem;" id="live-voted-count">0</span>
-                            </h2>
-                            <div style="height: 50vh; overflow-y: hidden; position: relative;">
-                                <div class="list-track" id="live-voted-list"></div>
-                            </div>
-                        </div>
-                        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-                            <h2 style="font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                Belum Memilih <span style="background: rgba(239,68,68,0.1); color: #ef4444; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem;" id="live-pending-count">0</span>
-                            </h2>
-                            <div style="height: 50vh; overflow-y: hidden; position: relative;">
-                                <div class="list-track" id="live-pending-list"></div>
-                            </div>
+                    <div style="flex-grow: 1; background: rgba(15, 23, 42, 0.8); border: 2px solid var(--primary); border-radius: 20px; padding: 40px; overflow: hidden; position: relative; box-shadow: 0 0 50px rgba(79, 70, 229, 0.2);">
+                        <div id="live-activities-list" style="display: flex; flex-direction: column; gap: 20px;">
+                            <div style="text-align:center; color: var(--text-muted); font-style: italic; font-size: 1.2rem;">Menunggu aktivitas pemilih...</div>
                         </div>
                     </div>
                 </div>

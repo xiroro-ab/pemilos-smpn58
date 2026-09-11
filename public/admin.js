@@ -319,36 +319,56 @@ async function fetchVoterList() {
     }
 }
 
-function renderLiveFeed() {
-    const votedList = document.getElementById('live-voted-list');
-    const pendingList = document.getElementById('live-pending-list');
-    if (!votedList || !pendingList) return;
+async function renderLiveFeed() {
+    const container = document.getElementById('live-activities-list');
+    if (!container) return;
     
     // Jangan perbarui DOM jika tab live tidak aktif (hemat kinerja)
     if (!document.getElementById('tab-live').classList.contains('active')) return;
     
-    const voted = globalVoters.filter(v => v.hasVoted);
-    const pending = globalVoters.filter(v => !v.hasVoted);
-    
-    document.getElementById('live-voted-count').textContent = voted.length;
-    document.getElementById('live-pending-count').textContent = pending.length;
-    
-    const buildHTML = (items) => {
-        if(items.length === 0) return '<p style="color:var(--text-muted); text-align:center; padding:20px;">Belum ada data</p>';
-        let h = '';
-        items.forEach(v => {
-            h += `<div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); border-radius:8px; margin-bottom:8px;">
-                <strong>${v.name}</strong> <span style="color:var(--text-muted); font-size:0.85rem;">${v.kelas || '-'}</span>
-            </div>`;
-        });
-        return items.length > 5 ? h + h : h; 
-    };
-    
-    votedList.innerHTML = buildHTML(voted);
-    votedList.style.animation = voted.length > 5 ? `scrollUp ${Math.max(voted.length * 2, 20)}s linear infinite` : 'none';
-    
-    pendingList.innerHTML = buildHTML(pending);
-    pendingList.style.animation = pending.length > 5 ? `scrollUp ${Math.max(pending.length * 2, 20)}s linear infinite` : 'none';
+    try {
+        const res = await fetch('/api/admin/activities');
+        const data = await res.json();
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach((act, index) => {
+                const time = new Date(act.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                // Animasi cascade untuk efek muncul
+                const delay = index * 0.1;
+                
+                if (act.action === 'LOGIN') {
+                    html += `
+                        <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px 20px; border-radius: 8px; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease-out forwards; opacity: 0; animation-delay: ${delay}s;">
+                            <span style="font-size: 2rem;">👋</span>
+                            <div>
+                                <strong style="font-size: 1.2rem; color: #60a5fa;">${act.student_name}</strong>
+                                <span style="color: var(--text-muted); font-size: 1.1rem;"> baru saja memasuki bilik suara rahasia!</span>
+                            </div>
+                            <span style="margin-left: auto; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                        </div>
+                    `;
+                } else if (act.action === 'VOTE') {
+                    html += `
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 15px 20px; border-radius: 8px; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease-out forwards; opacity: 0; animation-delay: ${delay}s;">
+                            <span style="font-size: 2rem;">🗳️</span>
+                            <div>
+                                <strong style="font-size: 1.2rem; color: #34d399;">${act.student_name}</strong>
+                                <span style="color: var(--text-muted); font-size: 1.1rem;"> telah resmi menggunakan hak pilihnya!</span>
+                            </div>
+                            <span style="margin-left: auto; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-style: italic; font-size: 1.2rem;">Menunggu aktivitas pemilih...</div>`;
+        }
+    } catch(err) {
+        console.error("Gagal mengambil live feed");
+    }
 }
 
 function populateClassFilter() {

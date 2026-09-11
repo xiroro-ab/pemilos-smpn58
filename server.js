@@ -41,6 +41,9 @@ app.post('/api/login', async (req, res) => {
         });
     }
     
+    // Log Activity (Fire and Forget)
+    supabase.from('activity_logs').insert([{ student_name: student.name, action: 'LOGIN' }]).then();
+    
     res.json({ success: true, data: { name: student.name, nisn: student.nisn } });
 });
 
@@ -111,7 +114,23 @@ app.post('/api/vote', async (req, res) => {
         console.error("Gagal update vote paslon");
     }
     
-    res.json({ success: true, message: 'Suara Anda berhasil direkam dengan aman. Terima kasih!' });
+    // Log Activity (Fire and Forget)
+    supabase.from('activity_logs').insert([{ student_name: student.name, action: 'VOTE' }]).then();
+    
+    res.json({ success: true, message: 'Suara Anda berhasil direkam. Terima kasih!' });
+});
+
+// API: Get Activity Logs (Admin)
+app.get('/api/admin/activities', async (req, res) => {
+    const { data: activities, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(20);
+        
+    if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil log aktivitas' });
+    
+    res.json({ success: true, data: activities });
 });
 
 // API: Admin Login
