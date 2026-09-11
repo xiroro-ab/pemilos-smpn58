@@ -165,16 +165,12 @@ function castVote(candidateId, candidateName) {
                 elements.successName.textContent = currentUser.name;
                 
                 // Deteksi Gender Sederhana untuk Avatar
-                const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel'];
+                const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan avataaars style dari DiceBear
-                let avatarUrl = '';
-                if (isFemale) {
-                    avatarUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(currentUser.name)}&top=longHair,straight01,straight02,curvy&clothing=blazerAndShirt,collarAndSweater`;
-                } else {
-                    avatarUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(currentUser.name)}&top=shortHair,frizzle,dreads,shortHairShortWaved&clothing=blazerAndSweater,hoodie`;
-                }
+                // Menggunakan Lorelei style dari DiceBear (Cute characters)
+                let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
+                let avatarUrl = `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(seed)}`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
