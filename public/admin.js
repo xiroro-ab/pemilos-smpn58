@@ -89,7 +89,9 @@ function updateRaceArena(candidates, totalStudents = 1) {
         arena.innerHTML = '';
         candidates.forEach(c => {
             const rawPercent = (c.votes / validTotal) * 100;
-            const heightPercent = c.votes === 0 ? 8 : Math.max(8, rawPercent);
+            // Gunakan kurva akar kuadrat agar perbedaan kecil di awal (1 vs 2 vote) terlihat jelas secara visual
+            const curveFactor = Math.sqrt(rawPercent / 100);
+            const heightPercent = c.votes === 0 ? 8 : 8 + (curveFactor * 92);
             const barColor = getColor(rawPercent);
             
             arena.innerHTML += `
@@ -106,7 +108,8 @@ function updateRaceArena(candidates, totalStudents = 1) {
     } else {
         candidates.forEach(c => {
             const rawPercent = (c.votes / validTotal) * 100;
-            const heightPercent = c.votes === 0 ? 8 : Math.max(8, rawPercent);
+            const curveFactor = Math.sqrt(rawPercent / 100);
+            const heightPercent = c.votes === 0 ? 8 : 8 + (curveFactor * 92);
             const barColor = getColor(rawPercent);
             
             const bar = document.getElementById(`bar-${c.id}`);
