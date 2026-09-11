@@ -53,8 +53,7 @@ app.get('/api/candidates', async (req, res) => {
         .from('candidates')
         .select('*')
         .order('id', { ascending: true });
-        
-    if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil data paslon.' });
+    if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil data paslon.', error: error.message });
     
     res.json({ success: true, data: candidates });
 });
