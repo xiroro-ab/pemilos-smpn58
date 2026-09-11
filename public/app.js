@@ -240,15 +240,24 @@ window.updateAvatarImage = function() {
     }
     let seed = window.currentAvatarIsFemale ? nameToUse + " Princess" : nameToUse + " Hero";
     let hairStyle = window.currentAvatarIsFemale ? "bob,bun,curly,curvy,straight01,straight02,longButNotTooLong,miaWallace" : "shortCurly,shortFlat,shortRound,sides,theCaesar,shaggy";
-    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(seed)}&top=${hairStyle}&size=512`;
+    let avatarUrl = `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(seed)}&top=${hairStyle}&size=512&r=${new Date().getTime()}`;
     
     console.log("🔄 Mengganti Avatar... Gender Perempuan:", window.currentAvatarIsFemale);
     console.log("🔗 URL Avatar Baru:", avatarUrl);
     
     const avatarImg = document.getElementById('voter-avatar');
     if (avatarImg) {
-        avatarImg.src = avatarUrl;
-        avatarImg.style.transform = 'scale(1.15) translateY(-6%)';
+        // Clone the node to completely force the browser to repaint
+        const newImg = avatarImg.cloneNode(true);
+        newImg.src = avatarUrl;
+        newImg.style.transform = 'scale(1.15) translateY(-6%)';
+        newImg.style.opacity = '0.4'; // Visual indicator that it is loading
+        
+        newImg.onload = () => {
+            newImg.style.opacity = '1'; // Restore opacity when loaded
+        };
+        
+        avatarImg.parentNode.replaceChild(newImg, avatarImg);
     }
 };
 
@@ -258,9 +267,5 @@ window.toggleAvatarGender = function() {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const avatarImg = document.getElementById('voter-avatar');
-    if (avatarImg) avatarImg.addEventListener('click', window.toggleAvatarGender);
-    
-    const hintElement = document.querySelector('#avatar-hint span');
-    if (hintElement) hintElement.addEventListener('click', window.toggleAvatarGender);
+    // Other initializations...
 });
