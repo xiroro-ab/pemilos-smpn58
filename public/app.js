@@ -163,6 +163,22 @@ function castVote(candidateId, candidateName) {
             
             if (data.success) {
                 elements.successName.textContent = currentUser.name;
+                
+                // Deteksi Gender Sederhana untuk Avatar
+                const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel'];
+                const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
+                
+                // Menggunakan avataaars style dari DiceBear
+                let avatarUrl = '';
+                if (isFemale) {
+                    avatarUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(currentUser.name)}&top=longHair,straight01,straight02,curvy&clothing=blazerAndShirt,collarAndSweater`;
+                } else {
+                    avatarUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(currentUser.name)}&top=shortHair,frizzle,dreads,shortHairShortWaved&clothing=blazerAndSweater,hoodie`;
+                }
+                
+                const avatarImg = document.getElementById('voter-avatar');
+                if(avatarImg) avatarImg.src = avatarUrl;
+                
                 showView('success');
                 
                 // Fire Confetti 🎉

@@ -354,7 +354,7 @@ async function fetchVoterList() {
 }
 
 let lastSeenActivityId = 0;
-let liveCarouselInterval = null;
+let isCarouselRunning = false;
 let currentCarouselIndex = 0;
 
 async function renderLiveFeed() {
@@ -363,17 +363,13 @@ async function renderLiveFeed() {
     
     // Jangan perbarui DOM jika tab live tidak aktif (hemat kinerja)
     if (!document.getElementById('tab-live').classList.contains('active')) {
-        if (liveCarouselInterval) {
-            clearInterval(liveCarouselInterval);
-            liveCarouselInterval = null;
-        }
         return;
     }
     
     // Start carousel if not started
-    if (!liveCarouselInterval && globalCandidates.length > 0) {
+    if (!isCarouselRunning && globalCandidates.length > 0) {
+        isCarouselRunning = true;
         updateCarousel();
-        liveCarouselInterval = setInterval(updateCarousel, 10000);
     }
     
     try {
