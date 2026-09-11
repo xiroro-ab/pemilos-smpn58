@@ -79,10 +79,12 @@
                 </div>
                 
                 <!-- Avatar Photo (Integrated / 3D Look) -->
-                <div style="text-align: center; margin: 20px 30px; position: relative; z-index: 3;">
-                    <div style="background: #041222; border-radius: 30px; padding: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); position: relative; overflow: visible;">
-                        <img id="voter-avatar" src="" alt="Avatar" style="width: 100%; max-width: 280px; height: auto; border-radius: 30px; object-fit: cover; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); position: relative; top: -10px; transform: scale(1.05);">
-                    </div>
+                <div style="text-align: center; margin: 25px 20px 10px 20px; position: relative; z-index: 3;">
+                    <!-- The Dark Box (Lebih kecil dari avatar agar kepala timbul) -->
+                    <div style="position: absolute; top: 20%; bottom: 5%; left: 8%; right: 8%; background: #041222; border-radius: 20px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); z-index: 1;"></div>
+                    
+                    <!-- The Avatar (Transparan, skala diperbesar) -->
+                    <img id="voter-avatar" src="" alt="Avatar" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.1) translateY(-8%); object-fit: contain;">
                 </div>
                 
                 <!-- Identitas & Barcode -->
@@ -95,8 +97,8 @@
                     </div>
                     
                     <!-- Vertical Text -->
-                    <div style="writing-mode: vertical-rl; transform: rotate(180deg); color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 600; letter-spacing: 2px;">
-                        🌐 WWW.SMPN58.SCH.ID
+                    <div style="writing-mode: vertical-rl; transform: rotate(180deg); color: rgba(255,255,255,0.5); font-size: 0.65rem; font-weight: 600; letter-spacing: 2px;">
+                        📸 WWW.INSTAGRAM.COM/SMPN58_PALEMBANG
                     </div>
                 </div>
             </div>
