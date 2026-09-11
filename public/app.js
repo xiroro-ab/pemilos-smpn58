@@ -168,9 +168,11 @@ function castVote(candidateId, candidateName) {
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Adventurer style dari DiceBear (Karakter full)
+                // Menggunakan Avataaars style dari DiceBear (Karakter sampai perut)
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+                let top = isFemale ? 'longHair,straight01,straight02,curvy' : 'shortHair,frizzle,dreads,shortHairShortWaved';
+                let clothing = isFemale ? 'blazerAndShirt,collarAndSweater' : 'blazerAndSweater,hoodie';
+                let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${top}&clothing=${clothing}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;
