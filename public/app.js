@@ -168,9 +168,9 @@ function castVote(candidateId, candidateName) {
                 const femaleKeywords = ['putri', 'siti', 'ayu', 'dewi', 'sri', 'nur', 'sari', 'indah', 'dwi', 'tria', 'syifa', 'zahra', 'aulia', 'anisa', 'nisa', 'salma', 'nadia', 'rani', 'dina', 'eka', 'amel', 'khanza', 'adiba'];
                 const isFemale = femaleKeywords.some(keyword => currentUser.name.toLowerCase().includes(keyword));
                 
-                // Menggunakan Notionists style dari DiceBear (Full body sampai perut/kaki)
+                // Menggunakan Micah style dari DiceBear (Penuh warna, premium, sampai dada/bahu)
                 let seed = isFemale ? currentUser.name + " Princess" : currentUser.name + " Hero";
-                let avatarUrl = `https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(seed)}`;
+                let avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(seed)}`;
                 
                 const avatarImg = document.getElementById('voter-avatar');
                 if(avatarImg) avatarImg.src = avatarUrl;

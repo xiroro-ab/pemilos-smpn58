@@ -80,16 +80,18 @@
                 
                 <!-- Avatar Photo (Integrated / 3D Look) -->
                 <div style="text-align: center; margin: 25px 20px 10px 20px; position: relative; z-index: 3;">
-                    <!-- The Dark Box (Lebih fit ke badan avatar agar terlihat nge-pas) -->
-                    <div style="position: absolute; top: 15%; bottom: 5%; left: 50%; transform: translateX(-50%); width: 170px; background: #041222; border-radius: 25px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); z-index: 1;"></div>
+                    <!-- The Dark Box (Diperlebar agar sejajar bahu avatar) -->
+                    <div style="position: absolute; top: 15%; bottom: 5%; left: 12%; right: 12%; background: #041222; border-radius: 25px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5); z-index: 1;"></div>
                     
                     <!-- The Avatar (Transparan, skala diperbesar) -->
-                    <img id="voter-avatar" src="" alt="Avatar" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.1) translateY(-8%); object-fit: contain;">
+                    <img id="voter-avatar" src="" alt="Avatar" style="width: 100%; max-width: 250px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: scale(1.15) translateY(-6%); object-fit: contain;">
                 </div>
                 
                 <!-- Identitas & Barcode -->
                 <div style="padding: 10px 30px 40px 30px; display: flex; flex-direction: column; align-items: flex-start; position: relative; margin-top: -10px;">
-                    <h1 id="success-name" style="font-size: 1.8rem; color: white; margin-bottom: 8px; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; padding-right: 30px;">NAMA SISWA</h1>
+                    <h1 id="success-name" style="font-size: 1.8rem; color: white; margin-bottom: 5px; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; padding-right: 30px;">NAMA SISWA</h1>
+                    
+                    <p style="font-size: 1rem; color: #94a3b8; font-weight: 600; margin-bottom: 12px;">Pemilih Resmi - 2026</p>
                     
                     <!-- Kata-kata Gen Z -->
                     <div style="display: inline-block; background: rgba(59, 130, 246, 0.2); padding: 6px 14px; border-radius: 30px; margin-bottom: 25px; border: 1px solid rgba(59, 130, 246, 0.4); box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
