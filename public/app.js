@@ -120,7 +120,10 @@ async function loadCandidates() {
         const data = await res.json();
         
         if (data.success) {
-            renderCandidates(data.data);
+            currentCandidates = data.data;
+            console.log('Candidates loaded:', currentCandidates);
+            console.log('First candidate:', currentCandidates[0]);
+            renderCandidates(currentCandidates);
         }
     } catch (error) {
         console.error("Gagal memuat kandidat", error);
