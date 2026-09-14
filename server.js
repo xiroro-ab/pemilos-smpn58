@@ -51,8 +51,9 @@ app.post('/api/login', async (req, res) => {
     
     if (schedule) {
         const now = new Date();
-        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][now.getDay()];
-        const currentTime = now.toTimeString().slice(0, 5);
+        const idTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][idTime.getUTCDay()];
+        const currentTime = idTime.toUTCString().split(' ')[4].slice(0, 5);
         
         if (schedule.day !== currentDay) {
             return res.status(403).json({ 
@@ -447,8 +448,9 @@ app.post('/api/validate-class-schedule', async (req, res) => {
         }
         
         const now = new Date();
-        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][now.getDay()];
-        const currentTime = now.toTimeString().slice(0, 5);
+        const idTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][idTime.getUTCDay()];
+        const currentTime = idTime.toUTCString().split(' ')[4].slice(0, 5);
         
         if (schedule.day !== currentDay) {
             return res.json({ success: false, allowed: false, message: `Jadwal voting kelas ${student.kelas} adalah hari ${schedule.day}. Hari ini ${currentDay}.` });
