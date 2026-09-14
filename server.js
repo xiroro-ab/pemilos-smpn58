@@ -378,13 +378,12 @@ app.post('/api/admin/class-schedules', async (req, res) => {
     }
     
     try {
-        const { data: existing } = await supabase
+        const { data: existing, error: checkError } = await supabase
             .from('class_schedules')
             .select('id')
-            .eq('kelas', kelas)
-            .single();
+            .eq('kelas', kelas);
         
-        if (existing) {
+        if (existing && existing.length > 0) {
             const { error } = await supabase
                 .from('class_schedules')
                 .update({ day, start_time, end_time, is_active: is_active !== false })
