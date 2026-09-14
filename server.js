@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 3000;
 // Gunakan process.env untuk produksi (Vercel), atau hardcode untuk lokal
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qykangfpbtobtswzscrc.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5a2FuZ2ZwYnRvYnRzd3pzY3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxMTYxMDgsImV4cCI6MjEwNDY5MjEwOH0.VvfnOG9t6E6zOVzFwZARx0HCsPQPOtAc6ogAxfVT8BQ';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false }
+});
 
 app.use(express.json({ limit: '10mb' })); // Limit diperbesar untuk Base64 Image
 app.use(express.static(path.join(__dirname, 'public')));
@@ -93,65 +95,50 @@ app.post('/api/admin/reset-database', async (req, res) => {
     }
 });
 
-// API: Submit Vote (Transaction)
-app.post('/api/vote', async (req, res) => {
+const voteLimiter = new Map();
+
+// API: Submit Vote (Atomik dengan RPC)
+app.post('/api/vote', (req, res, next) => {
+    const key = req.body?.nisn;
+    if (!key) return res.status(400).json({ success: false, message: 'NISN tidak ada' });
+    
+    if (voteLimiter.has(key)) {
+        return res.status(429).json({ success: false, message: 'Tunggu 5 detik sebelum request ulang' });
+    }
+    
+    voteLimiter.set(key, true);
+    setTimeout(() => voteLimiter.delete(key), 5000);
+    next();
+}, async (req, res) => {
     const { nisn, candidateId } = req.body;
     
     if (!nisn || !candidateId) {
         return res.status(400).json({ success: false, message: 'Data pemilihan tidak lengkap.' });
     }
     
-    // 1. Cek status student
-    const { data: student, error: studentError } = await supabase
-        .from('students')
-        .select('*')
-        .eq('nisn', nisn)
-        .single();
+    try {
+        // Panggil RPC function yang atomik
+        const { data, error } = await supabase.rpc('submit_vote', {
+            p_nisn: nisn,
+            p_candidate_id: candidateId
+        });
         
-    if (studentError || !student) {
-        return res.status(401).json({ success: false, message: 'Akses ditolak: Data siswa tidak ditemukan.' });
-    }
-    
-    if (student.hasVoted) {
-         return res.status(403).json({ success: false, message: 'Transaksi Ditolak: Anda sudah menggunakan hak suara sebelumnya.' });
-    }
-    
-    // 2. Ambil data kandidat
-    const { data: candidate, error: candidateError } = await supabase
-        .from('candidates')
-        .select('votes')
-        .eq('id', candidateId)
-        .single();
+        if (error) {
+            console.error('RPC Error:', error);
+            return res.status(500).json({ success: false, message: 'Gagal memproses suara: ' + error.message });
+        }
         
-    if (candidateError || !candidate) {
-        return res.status(400).json({ success: false, message: 'Kandidat tidak valid.' });
-    }
-    
-    // 3. Update Status Student
-    const { error: updateStudentError } = await supabase
-        .from('students')
-        .update({ hasVoted: true, votedAt: new Date().toISOString() })
-        .eq('nisn', nisn);
+        // Log Activity (Fire and Forget)
+        const { data: student } = await supabase.from('students').select('name').eq('nisn', nisn).single();
+        if (student) {
+            supabase.from('activity_logs').insert([{ student_name: student.name, action: 'VOTE' }]).then();
+        }
         
-    if (updateStudentError) {
-        return res.status(500).json({ success: false, message: 'Gagal memproses hak suara.' });
+        res.json(data);
+    } catch (error) {
+        console.error('Vote Error:', error);
+        res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
     }
-    
-    // 4. Update Votes Candidate
-    const { error: updateCandidateError } = await supabase
-        .from('candidates')
-        .update({ votes: candidate.votes + 1 })
-        .eq('id', candidateId);
-        
-    if (updateCandidateError) {
-        // Rollback idealnya dilakukan dengan RPC di Supabase, tapi untuk level ini kita asumsikan sukses
-        console.error("Gagal update vote paslon");
-    }
-    
-    // Log Activity (Fire and Forget)
-    supabase.from('activity_logs').insert([{ student_name: student.name, action: 'VOTE' }]).then();
-    
-    res.json({ success: true, message: 'Suara Anda berhasil direkam. Terima kasih!' });
 });
 
 // API: Get Activity Logs (Admin)
