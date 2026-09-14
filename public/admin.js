@@ -929,7 +929,9 @@ function openScheduleModal() {
     document.getElementById('schedule-day').value = 'Senin';
     document.getElementById('schedule-start').value = '';
     document.getElementById('schedule-end').value = '';
-    document.getElementById('schedule-modal').classList.remove('hidden');
+    const modal = document.getElementById('schedule-modal');
+    modal.classList.remove('hidden');
+    modal.style.zIndex = '9999';
 }
 
 function closeScheduleModal() {
@@ -1016,13 +1018,13 @@ async function saveSchedule() {
 }
 
 function editSchedule(kelas, day, start_time, end_time) {
+    openScheduleModal();
     document.getElementById('schedule-kelas').value = kelas;
     document.getElementById('schedule-kelas').disabled = true;
     document.getElementById('schedule-day').value = day;
     document.getElementById('schedule-start').value = start_time;
     document.getElementById('schedule-end').value = end_time;
     document.querySelector('#schedule-modal h2').textContent = 'Edit Jadwal Voting';
-    document.getElementById('schedule-modal').classList.remove('hidden');
 }
 
 async function deleteSchedule(kelas) {
