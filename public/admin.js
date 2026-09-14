@@ -979,13 +979,19 @@ function renderScheduleList(schedules) {
 }
 
 async function saveSchedule() {
-    const kelas = document.getElementById('schedule-kelas').value.trim();
+    const kelasSelect = document.getElementById('schedule-kelas');
+    const kelas = kelasSelect.value.trim();
     const day = document.getElementById('schedule-day').value;
     const start_time = document.getElementById('schedule-start').value;
     const end_time = document.getElementById('schedule-end').value;
     
-    if (!kelas || !start_time || !end_time) {
+    if (!kelas || !day || !start_time || !end_time) {
         showCustomAlert('Error', 'Semua field harus diisi', true);
+        return;
+    }
+    
+    if (start_time >= end_time) {
+        showCustomAlert('Error', 'Jam mulai harus lebih awal dari jam selesai', true);
         return;
     }
     
