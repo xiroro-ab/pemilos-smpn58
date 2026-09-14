@@ -969,8 +969,8 @@ function renderScheduleList(schedules) {
                 <td>${s.end_time}</td>
                 <td>${statusHTML}</td>
                 <td>
-                    <button style="background:none; border:none; color:#f59e0b; cursor:pointer; font-weight:600; margin-right:10px;" onclick="editSchedule('${s.kelas}', '${s.day}', '${s.start_time}', '${s.end_time}')">Edit</button>
-                    <button style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:600;" onclick="deleteSchedule('${s.kelas}')">Hapus</button>
+                    <button style="background:none; border:none; color:#f59e0b; cursor:pointer; font-weight:600; margin-right:10px;" onclick="editSchedule(&quot;${s.kelas}&quot;, &quot;${s.day}&quot;, &quot;${s.start_time}&quot;, &quot;${s.end_time}&quot;)">Edit</button>
+                    <button style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:600;" onclick="deleteSchedule(&quot;${s.kelas}&quot;)">Hapus</button>
                 </td>
             </tr>
         `;
