@@ -53,7 +53,7 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/candidates', async (req, res) => {
     const { data: candidates, error } = await supabase
         .from('candidates')
-        .select('id, name, vision, image')
+        .select('id, name, vision, image, vision_video_url, vision_poster')
         .order('id', { ascending: true });
     if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil data paslon.', error: error.message });
     
