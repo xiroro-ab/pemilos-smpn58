@@ -136,7 +136,15 @@ function renderCandidates(candidates) {
         card.className = 'candidate-card';
         let videoHtml = '';
         if (c.vision_video_url) {
-            videoHtml = `<div class="candidate-video"><iframe width="100%" height="200" src="${c.vision_video_url.replace('youtube.com/shorts/', 'youtube.com/embed/').replace(/\?.*/, '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+            let embedUrl = c.vision_video_url;
+            if (embedUrl.includes('youtube.com/shorts/')) {
+                const videoId = embedUrl.split('youtube.com/shorts/')[1].split('?')[0].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else if (embedUrl.includes('youtube.com/watch?v=')) {
+                const videoId = embedUrl.split('v=')[1].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            }
+            videoHtml = `<div class="candidate-video"><iframe width="100%" height="200" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
         card.innerHTML = `
             <img src="${c.image}" alt="Paslon ${c.id}" class="candidate-img" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=200&bold=true'">
