@@ -309,4 +309,23 @@ app.listen(PORT, () => {
     console.log(`Server E-Voting Pemilos berjalan di http://localhost:${PORT}`);
 });
 
+// API: Delete All Voters
+app.post('/api/admin/delete-all-voters', async (req, res) => {
+    try {
+        const { error } = await supabase
+            .from('students')
+            .delete()
+            .neq('nisn', '');
+        
+        if (error) {
+            return res.status(500).json({ success: false, message: 'Gagal menghapus data pemilih: ' + error.message });
+        }
+        
+        res.json({ success: true, message: 'Semua data pemilih berhasil dihapus!' });
+    } catch (error) {
+        console.error('Delete All Voters Error:', error);
+        res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
+    }
+});
+
 module.exports = app;

@@ -757,13 +757,49 @@ function deleteVoter(nisn) {
             const data = await res.json();
             if (data.success) {
                 fetchDashboardData();
-            } else {
-                showCustomAlert('Gagal', data.message, true);
-            }
-        } catch(err) {
-            showCustomAlert('Kesalahan', 'Gagal menghubungi server.', true);
+             } else {
+                 showCustomAlert('Gagal', data.message, true);
+             }
+         } catch(err) {
+             showCustomAlert('Kesalahan', 'Gagal menghubungi server.', true);
+         }
+     });
+ }
+
+function confirmDeleteAllVoters() {
+    showCustomConfirm(
+        '🗑️ HAPUS SEMUA DATA PEMILIH?',
+        'TINDAKAN INI TIDAK BISA DIBATALKAN!\n\nSemua data pemilih akan dihapus dari database.\nProses ini akan menghapus:\n- ID Pemilih (NISN)\n- Nama Pemilih\n- Kelas\n- Status Pemilihan\n\nApakah Anda YAKIN ingin menghapus SEMUA data pemilih?',
+        (confirmed) => {
+            if (!confirmed) return;
+            
+            showCustomPrompt(
+                'Konfirmasi Terakhir',
+                'Ketik "HAPUS SEMUA" (tanpa tanda kutip) untuk mengeksekusi penghapusan:',
+                async (inputValue) => {
+                    if (inputValue !== 'HAPUS SEMUA') {
+                        showCustomAlert('Dibatalkan', 'Proses penghapusan dibatalkan karena kata kunci salah.');
+                        return;
+                    }
+                    
+                    try {
+                        const res = await fetch('/api/admin/delete-all-voters', { method: 'POST' });
+                        const data = await res.json();
+                        
+                        if (data.success) {
+                            showCustomAlert('Berhasil', 'Semua data pemilih telah dihapus.', false);
+                            globalVoters = [];
+                            renderVoterList();
+                        } else {
+                            showCustomAlert('Gagal', data.message, true);
+                        }
+                    } catch(err) {
+                        showCustomAlert('Kesalahan', 'Gagal menghubungi server.', true);
+                    }
+                }
+            );
         }
-    });
+    );
 }
 
 function confirmResetDatabase() {
