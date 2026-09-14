@@ -499,9 +499,11 @@ function updateCarousel() {
         
         // 1. Cek apakah ada Video YouTube
         if (c.vision_video_url && c.vision_video_url.includes('youtu')) {
-            // Ekstrak ID YouTube (support youtu.be dan youtube.com)
+            // Ekstrak ID YouTube (support youtu.be, youtube.com, dan shorts)
             let videoId = '';
-            if (c.vision_video_url.includes('youtu.be/')) {
+            if (c.vision_video_url.includes('youtube.com/shorts/')) {
+                videoId = c.vision_video_url.split('youtube.com/shorts/')[1].split('?')[0].split('&')[0];
+            } else if (c.vision_video_url.includes('youtu.be/')) {
                 videoId = c.vision_video_url.split('youtu.be/')[1].split('?')[0];
             } else if (c.vision_video_url.includes('v=')) {
                 videoId = c.vision_video_url.split('v=')[1].split('&')[0];
