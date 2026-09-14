@@ -962,7 +962,14 @@ function renderScheduleList(schedules) {
     
     let html = '';
     schedules.forEach(s => {
-        const statusHTML = s.is_active ? `<span style="color:var(--success); font-weight:600;">🟢 Aktif</span>` : `<span style="color:#DC2626; font-weight:600;">🔴 Nonaktif</span>`;
+        const now = new Date();
+        const idTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][idTime.getUTCDay()];
+        const currentTime = idTime.toUTCString().split(' ')[4].slice(0, 5);
+        
+        const isScheduleActive = s.is_active && s.day === currentDay && currentTime >= s.start_time && currentTime <= s.end_time;
+        const statusHTML = isScheduleActive ? `<span style="color:var(--success); font-weight:600;">🟢 Aktif</span>` : `<span style="color:#DC2626; font-weight:600;">🔴 Nonaktif</span>`;
+        
         html += `
             <tr>
                 <td>${s.kelas}</td>
