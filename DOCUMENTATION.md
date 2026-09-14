@@ -94,6 +94,50 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
 - **Use Case:**
   Untuk cleanup data pemilih yang salah atau persiapan data sebelum import data baru dari Dapodik.
 
+## 9. Jadwal Voting Per Kelas (Schedule Management)
+- **Database Baru:** Tabel `class_schedules` dengan field:
+  - `kelas` (TEXT, unique) - Nama kelas (7A, 7B, dll)
+  - `day` (TEXT) - Hari voting (Senin, Selasa, etc)
+  - `start_time` (TIME) - Jam mulai voting
+  - `end_time` (TIME) - Jam selesai voting
+  - `is_active` (BOOLEAN) - Status jadwal aktif/nonaktif
+
+- **Admin Panel Fitur:**
+  - Tab baru "Jadwal Voting" di sidebar admin
+  - Form untuk tambah/edit jadwal per kelas
+  - Dropdown hari (Senin-Sabtu)
+  - Time picker untuk jam mulai dan selesai
+  - Tabel view dengan status aktif/nonaktif
+  - Button hapus untuk setiap jadwal
+
+- **API Endpoints:**
+  - `GET /api/admin/class-schedules` - Ambil semua jadwal
+  - `POST /api/admin/class-schedules` - Tambah/update jadwal
+  - `DELETE /api/admin/class-schedules/:kelas` - Hapus jadwal kelas
+  - `POST /api/validate-class-schedule` - Validasi jadwal saat login
+
+- **Login Validation:**
+  Saat siswa login, sistem otomatis:
+  1. Ambil data kelas siswa dari NISN
+  2. Cek apakah ada jadwal untuk kelas tersebut
+  3. Validasi hari saat ini vs jadwal (harus sesuai hari)
+  4. Validasi jam saat ini vs jadwal (harus dalam range jam mulai - selesai)
+  5. Jika belum waktunya → tolak dengan pesan "Jadwal voting kelas X adalah hari Y pukul HH:MM - HH:MM"
+  6. Jika sudah waktunya → allow login
+
+- **Use Case:**
+  Untuk mengatur voting per kelas agar tidak bentrok dan tersebar secara merata. Contoh:
+  - Kelas 7A: Senin 10:00 - 11:00
+  - Kelas 7B: Senin 11:15 - 12:00
+  - Kelas 7C: Selasa 10:00 - 11:00
+  - Dst...
+
+- **Benefit:**
+  - Load database tersebar, tidak spike
+  - User experience lebih smooth
+  - Kontrol voting terstruktur per kelas
+  - Mudah di-manage dari admin panel
+
 ---
 
 ## Ringkasan Performa & Keamanan
@@ -106,6 +150,20 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
 | Video Support | ✅ Complete | Voting page + Live feed admin |
 | Carousel Logic | ✅ Refactored | Queue-based, support poster + video |
 | Data Management | ✅ Enhanced | Delete all voters + reset database |
+| Schedule Management | ✅ Added | Per-kelas jadwal voting hari & jam |
 | Security | ✅ Enhanced | Double confirmation, keyword validation |
+
+## Timeline Kontrol Voting (Recommended Flow)
+
+**Contoh Implementasi:**
+- **Senin 10:00-11:00**: Kelas 7A voting (50 siswa)
+- **Senin 11:15-12:00**: Kelas 7B voting (50 siswa)
+- **Selasa 10:00-11:00**: Kelas 7C voting (50 siswa)
+- **Selasa 11:15-12:00**: Kelas 8A voting (50 siswa)
+- **Rabu 10:00-11:00**: Kelas 8B & 8C + Guru voting (60 siswa)
+
+Hasil: Load database smooth, tidak ada spike, semua siswa sempat vote dengan lancar.
+
+---
 
 *Seluruh perbaikan di atas memastikan aplikasi berada dalam performa puncak, kebal terhadap eror render browser, dan 100% siap digunakan pada acara Pemilos SMPN 58 Palembang yang sebenarnya pada Hari-H.*
