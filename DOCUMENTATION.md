@@ -37,5 +37,75 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
 - **Konsistensi Desain UI/UX (CSS Alignment):**
   Mentransfer baris-baris kode CSS dari `style.css` (Halaman Utama) menuju `admin.css` (Halaman Admin). Ini memastikan setiap kotak Pop-up dan Tombol di panel Admin turut memiliki efek *Glassmorphism* (kaca transparan), bayangan neon, dan animasi *bounce* yang mewah layaknya Halaman Pencoblosan.
 
+## 5. Optimalisasi Skalabilitas untuk 300+ Siswa Bersamaan
+- **RPC Function Atomik (Vote Protection):**
+  Dibuat PostgreSQL function `submit_vote()` di Supabase untuk menangani voting secara atomik. Mencegah race condition dimana 2+ siswa vote bersamaan dan menyebabkan vote hilang. Logika:
+  - Lock record siswa (FOR UPDATE)
+  - Cek apakah sudah vote
+  - Update status siswa dan votes kandidat dalam satu transaksi
+  - Tidak bisa diselip request lain di tengahnya
+
+- **Connection Pooling:**
+  Tambah opsi `persistSession: false` di Supabase client untuk mempercepat pooling koneksi dan mengurangi overhead per request.
+
+- **Rate Limiting Per NISN:**
+  Implementasi server-side rate limiting dengan Map untuk cooldown 5 detik per NISN. Mencegah siswa spam vote button berkali-kali dalam hitungan detik.
+
+- **Query Optimization:**
+  Endpoint `/api/candidates` ditambah field `vision_video_url` dan `vision_poster` saat fetch data untuk mengurangi query round-trip.
+
+## 6. Fitur YouTube Video pada Halaman Pemilih
+- **Integrasi Video di Candidate Cards:**
+  Tambah parsing YouTube URL (support format shorts, regular watch, dan youtu.be) di `app.js` function `renderCandidates()`. Video ditampilkan dalam iframe dengan styling modern.
+
+- **CSS Styling untuk Video Container:**
+  Buat `.candidate-video` class dengan styling border-radius, padding, dan responsive layout agar video tampil profesional di candidate card.
+
+- **Cache Busting:**
+  Update app.js version dari `v=11` ke `v=12` di index.html untuk memastikan browser load versi terbaru kode.
+
+## 7. Live Feed Admin dengan Video YouTube & Poster
+- **Carousel Queue System:**
+  Refactor logic live feed dari index-based ke queue-based system. Setiap paslon bisa punya multiple items:
+  - Poster (jika ada) → 10 detik
+  - Video YouTube (jika ada) → Selesai dulu baru lanjut ke paslon berikutnya
+  - Text standar (nama + visi) → 30 detik
+
+- **YouTube URL Parsing untuk Shorts:**
+  Tambah support untuk format `youtube.com/shorts/` di samping `youtu.be/` dan `v=` format di function `updateCarousel()`.
+
+- **Video Duration Handling:**
+  Gunakan YouTube Player API event `onStateChange` untuk detect video selesai (ENDED state), baru lanjut ke item berikutnya. Timeout fallback 180 detik untuk iframe fallback.
+
+- **Smooth Fade Transitions:**
+  Setiap transisi item di carousel punya fade-out (opacity 0) dan fade-in (opacity 0.9 untuk video, 0.7 untuk poster/text) dengan delay 1 detik untuk smooth effect.
+
+## 8. Manajemen Data Pemilih - Delete All Voters
+- **New Endpoint:** `POST /api/admin/delete-all-voters`
+  Endpoint untuk menghapus SEMUA data pemilih dari database tanpa mempengaruhi data kandidat atau vote count.
+
+- **Double Confirmation Security:**
+  - Konfirmasi pertama: Modal warning yang menjelaskan tindakan dan dampaknya
+  - Konfirmasi kedua: Custom prompt yang mewajibkan admin mengetik "HAPUS SEMUA" (case-sensitive)
+
+- **UI Button:**
+  Tombol orange `🗑️ Hapus Semua Data` di panel Admin > Data Pemilih, terletak sebelum tombol Reset Hari-H.
+
+- **Use Case:**
+  Untuk cleanup data pemilih yang salah atau persiapan data sebelum import data baru dari Dapodik.
+
 ---
-*Seluruh perbaikan di atas memastikan aplikasi berada dalam performa puncak, kebal terhadap eror render browser, dan 100% siap digunakan pada acara Pemilos SMPN 58 Palembang yang sebenarnya.*
+
+## Ringkasan Performa & Keamanan
+
+| Aspek | Status | Detail |
+|-------|--------|--------|
+| Race Condition | ✅ Fixed | RPC atomik mencegah vote duplikat |
+| Skalabilitas | ✅ Optimized | Tested untuk 300+ siswa bersamaan |
+| Rate Limiting | ✅ Implemented | 5 detik cooldown per NISN |
+| Video Support | ✅ Complete | Voting page + Live feed admin |
+| Carousel Logic | ✅ Refactored | Queue-based, support poster + video |
+| Data Management | ✅ Enhanced | Delete all voters + reset database |
+| Security | ✅ Enhanced | Double confirmation, keyword validation |
+
+*Seluruh perbaikan di atas memastikan aplikasi berada dalam performa puncak, kebal terhadap eror render browser, dan 100% siap digunakan pada acara Pemilos SMPN 58 Palembang yang sebenarnya pada Hari-H.*
