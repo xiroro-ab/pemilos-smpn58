@@ -45,6 +45,7 @@ function switchTab(tabId, element) {
 
 async function initDashboard() {
     await fetchDashboardData();
+    await loadSchedules();
     liveInterval = setInterval(fetchDashboardData, 1500);
 }
 
@@ -908,4 +909,108 @@ function cancelImport() {
     document.getElementById('csv-file').value = '';
     document.getElementById('csv-filename').textContent = 'Belum ada file dipilih';
     document.getElementById('csv-preview-container').classList.add('hidden');
+}
+
+function openScheduleModal() {
+    document.getElementById('schedule-kelas').value = '';
+    document.getElementById('schedule-day').value = 'Senin';
+    document.getElementById('schedule-start').value = '';
+    document.getElementById('schedule-end').value = '';
+    document.getElementById('schedule-modal').classList.remove('hidden');
+}
+
+function closeScheduleModal() {
+    document.getElementById('schedule-modal').classList.add('hidden');
+}
+
+async function loadSchedules() {
+    try {
+        const res = await fetch('/api/admin/class-schedules');
+        const data = await res.json();
+        
+        if (data.success) {
+            renderScheduleList(data.data);
+        }
+    } catch (error) {
+        console.error('Gagal load schedules', error);
+    }
+}
+
+function renderScheduleList(schedules) {
+    const tbody = document.getElementById('schedule-list-body');
+    if (!tbody) return;
+    
+    if (schedules.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748B;">Belum ada jadwal voting.</td></tr>`;
+        return;
+    }
+    
+    let html = '';
+    schedules.forEach(s => {
+        const statusHTML = s.is_active ? `<span style="color:var(--success); font-weight:600;">🟢 Aktif</span>` : `<span style="color:#DC2626; font-weight:600;">🔴 Nonaktif</span>`;
+        html += `
+            <tr>
+                <td>${s.kelas}</td>
+                <td>${s.day}</td>
+                <td>${s.start_time}</td>
+                <td>${s.end_time}</td>
+                <td>${statusHTML}</td>
+                <td>
+                    <button style="background:none; border:none; color:#3b82f6; cursor:pointer; font-weight:600;" onclick="deleteSchedule('${s.kelas}')">Hapus</button>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+async function saveSchedule() {
+    const kelas = document.getElementById('schedule-kelas').value.trim();
+    const day = document.getElementById('schedule-day').value;
+    const start_time = document.getElementById('schedule-start').value;
+    const end_time = document.getElementById('schedule-end').value;
+    
+    if (!kelas || !start_time || !end_time) {
+        showCustomAlert('Error', 'Semua field harus diisi', true);
+        return;
+    }
+    
+    try {
+        const res = await fetch('/api/admin/class-schedules', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ kelas, day, start_time, end_time, is_active: true })
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+            showCustomAlert('Berhasil', data.message, false);
+            closeScheduleModal();
+            loadSchedules();
+        } else {
+            showCustomAlert('Error', data.message, true);
+        }
+    } catch (error) {
+        showCustomAlert('Error', 'Gagal simpan jadwal', true);
+    }
+}
+
+async function deleteSchedule(kelas) {
+    showCustomConfirm('Hapus Jadwal?', `Apakah Anda yakin ingin menghapus jadwal voting untuk kelas ${kelas}?`, async (confirmed) => {
+        if (!confirmed) return;
+        
+        try {
+            const res = await fetch(`/api/admin/class-schedules/${kelas}`, { method: 'DELETE' });
+            const data = await res.json();
+            
+            if (data.success) {
+                showCustomAlert('Berhasil', 'Jadwal berhasil dihapus', false);
+                loadSchedules();
+            } else {
+                showCustomAlert('Error', data.message, true);
+            }
+        } catch (error) {
+            showCustomAlert('Error', 'Gagal hapus jadwal', true);
+        }
+    });
 }

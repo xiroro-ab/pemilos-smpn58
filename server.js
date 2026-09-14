@@ -43,6 +43,32 @@ app.post('/api/login', async (req, res) => {
         });
     }
     
+    const { data: schedule } = await supabase
+        .from('class_schedules')
+        .select('*')
+        .eq('kelas', student.kelas)
+        .single();
+    
+    if (schedule) {
+        const now = new Date();
+        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][now.getDay()];
+        const currentTime = now.toTimeString().slice(0, 5);
+        
+        if (schedule.day !== currentDay) {
+            return res.status(403).json({ 
+                success: false, 
+                message: `Jadwal voting kelas ${student.kelas} adalah hari ${schedule.day}. Hari ini ${currentDay}.` 
+            });
+        }
+        
+        if (currentTime < schedule.start_time || currentTime > schedule.end_time) {
+            return res.status(403).json({ 
+                success: false, 
+                message: `Jadwal voting kelas ${student.kelas} dimulai pukul ${schedule.start_time} - ${schedule.end_time}. Saat ini ${currentTime}.` 
+            });
+        }
+    }
+    
     // Log Activity (Fire and Forget)
     supabase.from('activity_logs').insert([{ student_name: student.name, action: 'LOGIN' }]).then();
     
@@ -325,6 +351,117 @@ app.post('/api/admin/delete-all-voters', async (req, res) => {
     } catch (error) {
         console.error('Delete All Voters Error:', error);
         res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
+    }
+});
+
+// API: Get Class Schedules
+app.get('/api/admin/class-schedules', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('class_schedules')
+            .select('*')
+            .order('kelas', { ascending: true });
+        
+        if (error) return res.status(500).json({ success: false, message: 'Gagal mengambil jadwal kelas' });
+        res.json({ success: true, data });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server' });
+    }
+});
+
+// API: Add/Update Class Schedule
+app.post('/api/admin/class-schedules', async (req, res) => {
+    const { kelas, day, start_time, end_time, is_active } = req.body;
+    
+    if (!kelas || !day || !start_time || !end_time) {
+        return res.status(400).json({ success: false, message: 'Data tidak lengkap' });
+    }
+    
+    try {
+        const { data: existing } = await supabase
+            .from('class_schedules')
+            .select('id')
+            .eq('kelas', kelas)
+            .single();
+        
+        if (existing) {
+            const { error } = await supabase
+                .from('class_schedules')
+                .update({ day, start_time, end_time, is_active: is_active !== false })
+                .eq('kelas', kelas);
+            
+            if (error) return res.status(500).json({ success: false, message: 'Gagal update jadwal' });
+            res.json({ success: true, message: 'Jadwal kelas berhasil diperbarui' });
+        } else {
+            const { error } = await supabase
+                .from('class_schedules')
+                .insert([{ kelas, day, start_time, end_time, is_active: is_active !== false }]);
+            
+            if (error) return res.status(500).json({ success: false, message: 'Gagal menambah jadwal' });
+            res.json({ success: true, message: 'Jadwal kelas berhasil ditambahkan' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server' });
+    }
+});
+
+// API: Delete Class Schedule
+app.delete('/api/admin/class-schedules/:kelas', async (req, res) => {
+    const { kelas } = req.params;
+    
+    try {
+        const { error } = await supabase
+            .from('class_schedules')
+            .delete()
+            .eq('kelas', kelas);
+        
+        if (error) return res.status(500).json({ success: false, message: 'Gagal menghapus jadwal' });
+        res.json({ success: true, message: 'Jadwal kelas berhasil dihapus' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server' });
+    }
+});
+
+// API: Validate Class Schedule saat Login
+app.post('/api/validate-class-schedule', async (req, res) => {
+    const { nisn } = req.body;
+    
+    try {
+        const { data: student } = await supabase
+            .from('students')
+            .select('kelas')
+            .eq('nisn', nisn)
+            .single();
+        
+        if (!student) {
+            return res.status(401).json({ success: false, message: 'Siswa tidak ditemukan' });
+        }
+        
+        const { data: schedule } = await supabase
+            .from('class_schedules')
+            .select('*')
+            .eq('kelas', student.kelas)
+            .single();
+        
+        if (!schedule) {
+            return res.json({ success: true, allowed: true, message: 'Tidak ada jadwal, akses terbuka' });
+        }
+        
+        const now = new Date();
+        const currentDay = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][now.getDay()];
+        const currentTime = now.toTimeString().slice(0, 5);
+        
+        if (schedule.day !== currentDay) {
+            return res.json({ success: false, allowed: false, message: `Jadwal voting kelas ${student.kelas} adalah hari ${schedule.day}. Hari ini ${currentDay}.` });
+        }
+        
+        if (currentTime < schedule.start_time || currentTime > schedule.end_time) {
+            return res.json({ success: false, allowed: false, message: `Jadwal voting kelas ${student.kelas} dimulai pukul ${schedule.start_time} - ${schedule.end_time}. Saat ini ${currentTime}.` });
+        }
+        
+        res.json({ success: true, allowed: true, message: 'Akses diizinkan' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Kesalahan server' });
     }
 });
 
