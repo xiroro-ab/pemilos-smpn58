@@ -105,10 +105,19 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
 - **Admin Panel Fitur:**
   - Tab baru "Jadwal Voting" di sidebar admin
   - Form untuk tambah/edit jadwal per kelas
-  - Dropdown hari (Senin-Sabtu)
+  - Dropdown kelas auto-populated dari data pemilih
   - Time picker untuk jam mulai dan selesai
-  - Tabel view dengan status aktif/nonaktif
-  - Button hapus untuk setiap jadwal
+  - Tabel view dengan status real-time
+  - Button Edit (ubah hari/jam) dan Hapus
+
+- **Status Jadwal - AUTO-CHECK:**
+  - 🟢 **Aktif** - Jadwal berlaku SEKARANG:
+    - Hari saat ini = hari jadwal
+    - Jam sekarang dalam range start_time - end_time
+    - Siswa dari kelas ini BISA login
+  - 🔴 **Nonaktif** - Di luar jadwal:
+    - Hari berbeda atau jam belum/sudah lewat
+    - Siswa dari kelas ini TIDAK bisa login
 
 - **API Endpoints:**
   - `GET /api/admin/class-schedules` - Ambil semua jadwal
@@ -116,27 +125,33 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
   - `DELETE /api/admin/class-schedules/:kelas` - Hapus jadwal kelas
   - `POST /api/validate-class-schedule` - Validasi jadwal saat login
 
-- **Login Validation:**
-  Saat siswa login, sistem otomatis:
+- **Login Validation (Server-side):**
+  Saat siswa login:
   1. Ambil data kelas siswa dari NISN
   2. Cek apakah ada jadwal untuk kelas tersebut
-  3. Validasi hari saat ini vs jadwal (harus sesuai hari)
-  4. Validasi jam saat ini vs jadwal (harus dalam range jam mulai - selesai)
-  5. Jika belum waktunya → tolak dengan pesan "Jadwal voting kelas X adalah hari Y pukul HH:MM - HH:MM"
-  6. Jika sudah waktunya → allow login
+  3. **Jika ada jadwal:**
+     - Validasi hari saat ini vs jadwal (harus sesuai hari)
+     - Validasi jam saat ini vs jadwal (harus dalam range jam mulai - selesai)
+     - Jika tidak sesuai → tolak dengan pesan jadwal
+  4. **Jika tidak ada jadwal:**
+     - Allow login kapan saja (optional, admin bisa atur)
+
+- **Timezone:** Indonesia (UTC+7)
+  - Semua validasi jam menggunakan timezone lokal
+  - Tidak bergantung pada timezone server
 
 - **Use Case:**
-  Untuk mengatur voting per kelas agar tidak bentrok dan tersebar secara merata. Contoh:
-  - Kelas 7A: Senin 10:00 - 11:00
-  - Kelas 7B: Senin 11:15 - 12:00
-  - Kelas 7C: Selasa 10:00 - 11:00
-  - Dst...
+  Untuk mengatur voting per kelas agar tersebar merata. Contoh:
+  - Kelas 7A: Senin 10:00 - 11:00 (🟢 Aktif saat Senin jam 10:00-11:00)
+  - Kelas 7B: Senin 11:15 - 12:00 (🟢 Aktif saat Senin jam 11:15-12:00)
+  - Kelas 7C: Selasa 10:00 - 11:00 (🟢 Aktif saat Selasa jam 10:00-11:00)
 
 - **Benefit:**
   - Load database tersebar, tidak spike
-  - User experience lebih smooth
+  - User experience smooth
   - Kontrol voting terstruktur per kelas
   - Mudah di-manage dari admin panel
+  - Status real-time, tidak perlu manual update
 
 ---
 
