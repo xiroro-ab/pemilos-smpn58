@@ -134,10 +134,15 @@ function renderCandidates(candidates) {
     candidates.forEach(c => {
         const card = document.createElement('div');
         card.className = 'candidate-card';
+        let videoHtml = '';
+        if (c.vision_video_url) {
+            videoHtml = `<div class="candidate-video"><iframe width="100%" height="200" src="${c.vision_video_url.replace('youtube.com/shorts/', 'youtube.com/embed/').replace(/\?.*/, '')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        }
         card.innerHTML = `
             <img src="${c.image}" alt="Paslon ${c.id}" class="candidate-img" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=200&bold=true'">
             <h3 class="candidate-name">0${c.id} - ${c.name}</h3>
             <p class="candidate-vision">"${c.vision}"</p>
+            ${videoHtml}
             <button class="btn-vote" onclick="castVote(${c.id}, '${c.name}')">Pilih Paslon 0${c.id}</button>
         `;
         elements.candidatesContainer.appendChild(card);
