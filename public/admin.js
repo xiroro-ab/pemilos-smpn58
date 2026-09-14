@@ -553,7 +553,7 @@ function updateCarousel() {
                     contentContainer.innerHTML = `
                         <iframe width="800" height="450" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 20px; border: 4px solid var(--primary);"></iframe>
                     `;
-                    displayDuration = 60000; // Set 60 detik fallback
+                    displayDuration = 180000; // 180 detik (3 menit) - tunggu video selesai atau event ENDED
                     carouselTimeout = setTimeout(() => {
                         currentCarouselIndex = (currentCarouselIndex + 1) % globalCandidates.length;
                         updateCarousel();
