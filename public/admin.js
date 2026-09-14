@@ -3,6 +3,7 @@ const tabs = {
     dashboard: document.getElementById('tab-dashboard'), 
     settings: document.getElementById('tab-settings'),
     status: document.getElementById('tab-status'),
+    schedule: document.getElementById('tab-schedule'),
     live: document.getElementById('tab-live')
 };
 let liveInterval = null;
