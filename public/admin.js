@@ -924,6 +924,8 @@ function openScheduleModal() {
         kelasSelect.appendChild(option);
     });
     
+    kelasSelect.disabled = false;
+    document.querySelector('#schedule-modal h2').textContent = 'Tambah/Edit Jadwal Voting';
     document.getElementById('schedule-day').value = 'Senin';
     document.getElementById('schedule-start').value = '';
     document.getElementById('schedule-end').value = '';
@@ -967,7 +969,8 @@ function renderScheduleList(schedules) {
                 <td>${s.end_time}</td>
                 <td>${statusHTML}</td>
                 <td>
-                    <button style="background:none; border:none; color:#3b82f6; cursor:pointer; font-weight:600;" onclick="deleteSchedule('${s.kelas}')">Hapus</button>
+                    <button style="background:none; border:none; color:#f59e0b; cursor:pointer; font-weight:600; margin-right:10px;" onclick="editSchedule('${s.kelas}', '${s.day}', '${s.start_time}', '${s.end_time}')">Edit</button>
+                    <button style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:600;" onclick="deleteSchedule('${s.kelas}')">Hapus</button>
                 </td>
             </tr>
         `;
@@ -1004,6 +1007,16 @@ async function saveSchedule() {
     } catch (error) {
         showCustomAlert('Error', 'Gagal simpan jadwal', true);
     }
+}
+
+function editSchedule(kelas, day, start_time, end_time) {
+    document.getElementById('schedule-kelas').value = kelas;
+    document.getElementById('schedule-kelas').disabled = true;
+    document.getElementById('schedule-day').value = day;
+    document.getElementById('schedule-start').value = start_time;
+    document.getElementById('schedule-end').value = end_time;
+    document.querySelector('#schedule-modal h2').textContent = 'Edit Jadwal Voting';
+    document.getElementById('schedule-modal').classList.remove('hidden');
 }
 
 async function deleteSchedule(kelas) {
