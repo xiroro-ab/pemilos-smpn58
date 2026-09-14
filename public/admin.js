@@ -913,7 +913,17 @@ function cancelImport() {
 }
 
 function openScheduleModal() {
-    document.getElementById('schedule-kelas').value = '';
+    const kelasSelect = document.getElementById('schedule-kelas');
+    const uniqueClasses = [...new Set(globalVoters.map(v => v.kelas))].filter(Boolean).sort();
+    
+    kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+    uniqueClasses.forEach(kelas => {
+        const option = document.createElement('option');
+        option.value = kelas;
+        option.textContent = kelas;
+        kelasSelect.appendChild(option);
+    });
+    
     document.getElementById('schedule-day').value = 'Senin';
     document.getElementById('schedule-start').value = '';
     document.getElementById('schedule-end').value = '';
