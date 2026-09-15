@@ -94,6 +94,9 @@ Dokumen ini mencatat seluruh perbaikan (*bug fixes*), pengoptimalan, dan penamba
 - **Use Case:**
   Untuk cleanup data pemilih yang salah atau persiapan data sebelum import data baru dari Dapodik.
 
+- **Perilaku:**
+  Menghapus SEMUA data dari tabel `students` DAN `activity_logs` (termasuk log LOGIN dan VOTE), tanpa mempengaruhi data kandidat dan vote count.
+
 ## 9. Jadwal Voting Per Kelas (Schedule Management)
 - **Database Baru:** Tabel `class_schedules` dengan field:
   - `kelas` (TEXT, unique) - Nama kelas (7A, 7B, dll)
