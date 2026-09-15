@@ -448,22 +448,22 @@ async function renderLiveFeed() {
                 if (act.action === 'LOGIN') {
                     item.style.borderColor = '#3b82f6';
                     item.innerHTML = `
-                        <span style="font-size: 2rem;">👋</span>
+                        <span style="font-size: 1.2rem;">👋</span>
                         <div>
-                            <strong style="font-size: 1.2rem; color: #60a5fa;">${act.student_name}</strong>
-                            <span style="color: white; font-size: 1.1rem;"> baru saja memasuki bilik suara!</span>
+                            <strong style="font-size: 0.9rem; color: #60a5fa;">${act.student_name}</strong>
+                            <span style="color: white; font-size: 0.85rem;"> baru saja memasuki bilik suara!</span>
                         </div>
-                        <span style="margin-left: 10px; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                        <span style="margin-left: 6px; color: var(--text-muted); font-size: 0.75rem;">${time}</span>
                     `;
                 } else if (act.action === 'VOTE') {
                     item.style.borderColor = '#10b981';
                     item.innerHTML = `
-                        <span style="font-size: 2rem;">🗳️</span>
+                        <span style="font-size: 1.2rem;">🗳️</span>
                         <div>
-                            <strong style="font-size: 1.2rem; color: #34d399;">${act.student_name}</strong>
-                            <span style="color: white; font-size: 1.1rem;"> resmi menggunakan hak pilihnya!</span>
+                            <strong style="font-size: 0.9rem; color: #34d399;">${act.student_name}</strong>
+                            <span style="color: white; font-size: 0.85rem;"> resmi menggunakan hak pilihnya!</span>
                         </div>
-                        <span style="margin-left: 10px; color: var(--text-muted); font-size: 0.9rem;">${time}</span>
+                        <span style="margin-left: 6px; color: var(--text-muted); font-size: 0.75rem;">${time}</span>
                     `;
                 }
                 

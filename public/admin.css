@@ -218,13 +218,13 @@ select option {
     animation-timing-function: linear;
     animation-fill-mode: forwards;
     background: rgba(30, 41, 59, 0.85);
-    border-left: 4px solid #3b82f6;
-    padding: 10px 20px;
-    border-radius: 50px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-left: 3px solid #3b82f6;
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 8px;
     z-index: 20;
     pointer-events: none;
     backdrop-filter: blur(5px);
