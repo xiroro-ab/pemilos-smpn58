@@ -348,7 +348,10 @@ app.post('/api/admin/delete-all-voters', async (req, res) => {
             return res.status(500).json({ success: false, message: 'Gagal menghapus data pemilih: ' + error.message });
         }
         
-        res.json({ success: true, message: 'Semua data pemilih berhasil dihapus!' });
+        // Hapus juga activity logs (LOGIN, VOTE)
+        await supabase.from('activity_logs').delete().neq('id', 0);
+        
+        res.json({ success: true, message: 'Semua data pemilih dan log aktivitas berhasil dihapus!' });
     } catch (error) {
         console.error('Delete All Voters Error:', error);
         res.status(500).json({ success: false, message: 'Kesalahan server: ' + error.message });
