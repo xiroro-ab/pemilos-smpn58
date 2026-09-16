@@ -77,14 +77,14 @@ h1 { color: var(--text); font-size: 1.5rem; margin-bottom: 5px; font-weight: 600
 /* --- RACE ARENA (Bar Chart) --- */
 .race-arena-container { background: var(--card); border-radius: 12px; padding: 30px; border: 1px solid var(--border); overflow-x: auto; }
 #race-arena { display: flex; flex-direction: row; justify-content: space-around; align-items: flex-end; height: 350px; padding-top: 20px; gap: 20px; }
-.pillar-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 120px; gap: 5px; height: 100%; }
+.pillar-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 160px; gap: 5px; height: 100%; }
 .pillar-bar-wrapper { flex-grow: 1; width: 60px; background: transparent; position: relative; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
 .pillar-score { font-size: 1.5rem; font-weight: bold; color: var(--text); margin-bottom: 5px; z-index: 10; }
 .pillar-bar { width: 100%; background: var(--primary); transition: height 1s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 8px 8px 0 0; }
 .pillar-bar.rank-1 { background: var(--success); }
 .pillar-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--border); object-fit: cover; }
-.pillar-name { color: var(--text); font-weight: 600; font-size: 0.85rem; text-align: center; max-width: 130px; margin: 0 auto; min-height: 2.8em; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.pillar-name small { font-size: 0.7rem; }
+.pillar-name { color: var(--text); font-weight: 600; font-size: 0.8rem; text-align: center; white-space: nowrap; overflow: visible; }
+.pillar-name small { font-size: 0.7rem; display: block; margin-bottom: 2px; }
 
 /* Settings */
 .settings-container { display: grid; gap: 20px; }
