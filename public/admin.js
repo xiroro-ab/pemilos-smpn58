@@ -103,7 +103,7 @@ function updateRaceArena(candidates, totalStudents = 1) {
                         <div class="pillar-bar" id="bar-${c.id}" style="height: ${heightPercent}%; background-color: ${c.votes === 0 ? 'var(--border)' : barColor}"></div>
                     </div>
                     <img src="${c.image}" class="pillar-avatar" id="avatar-arena-${c.id}" onerror="this.src='https://ui-avatars.com/api/?name=0${c.id}&background=1e293b&color=3b82f6&size=150&bold=true'">
-                    <div class="pillar-name">Paslon 0${c.id}</div>
+                    <div class="pillar-name">${c.name}</div>
                 </div>
             `;
         });
