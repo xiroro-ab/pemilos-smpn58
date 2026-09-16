@@ -83,7 +83,8 @@ h1 { color: var(--text); font-size: 1.5rem; margin-bottom: 5px; font-weight: 600
 .pillar-bar { width: 100%; background: var(--primary); transition: height 1s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 8px 8px 0 0; }
 .pillar-bar.rank-1 { background: var(--success); }
 .pillar-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--border); object-fit: cover; }
-.pillar-name { color: var(--text); font-weight: 600; font-size: 0.95rem; text-align: center; }
+.pillar-name { color: var(--text); font-weight: 600; font-size: 0.95rem; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 auto; }
+.pillar-name small { white-space: nowrap; }
 
 /* Settings */
 .settings-container { display: grid; gap: 20px; }
