@@ -151,6 +151,7 @@ function renderSettings(candidates) {
                     <input type="file" id="file-${c.id}" accept="image/png, image/jpeg, image/webp" onchange="previewFile(${c.id})">
                     <span class="file-name-display" id="filename-${c.id}">Pilih gambar (.jpg / .png)</span>
                 </div>
+                <button type="button" style="background:none; border:1px solid #ef4444; color:#ef4444; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; margin-top:5px;" onclick="removePhoto(${c.id})">🗑️ Hapus Foto</button>
                 
                 <label>Visi & Misi</label>
                 <textarea id="vision-${c.id}" rows="3">${c.vision}</textarea>
@@ -167,6 +168,7 @@ function renderSettings(candidates) {
                 </div>
                 <!-- Poster Preview (Hidden initially) -->
                 <img src="${c.vision_poster || ''}" id="poster-preview-${c.id}" style="max-width: 100%; border-radius: 8px; margin-bottom: 15px; display: ${c.vision_poster ? 'block' : 'none'};">
+                <button type="button" style="background:none; border:1px solid #ef4444; color:#ef4444; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; margin-bottom:15px;" onclick="removePoster(${c.id})">🗑️ Hapus Poster</button>
                 
                 <button class="btn btn-save" onclick="saveCandidate(${c.id})">Simpan Semua Perubahan</button>
             </div>
@@ -248,6 +250,60 @@ function previewPoster(id) {
         };
         reader.readAsDataURL(file);
     }
+}
+
+async function removePhoto(id) {
+    showCustomConfirm('Hapus Foto?', 'Apakah Anda yakin ingin menghapus foto paslon ini?', async (confirmed) => {
+        if (!confirmed) return;
+        
+        try {
+            const defaultImg = `https://ui-avatars.com/api/?name=Paslon+0${id}&background=1e293b&color=3b82f6&size=200&bold=true`;
+            const res = await fetch('/api/admin/update-candidate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, image: defaultImg })
+            });
+            
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`preview-${id}`).src = defaultImg;
+                document.getElementById(`filename-${id}`).textContent = 'Pilih gambar (.jpg / .png)';
+                showCustomAlert('Berhasil', 'Foto berhasil dihapus', false);
+            } else {
+                showCustomAlert('Error', 'Gagal menghapus foto', true);
+            }
+        } catch (error) {
+            showCustomAlert('Error', 'Gagal menghapus foto', true);
+        }
+    });
+}
+
+async function removePoster(id) {
+    showCustomConfirm('Hapus Poster?', 'Apakah Anda yakin ingin menghapus poster kampanye ini?', async (confirmed) => {
+        if (!confirmed) return;
+        
+        try {
+            const res = await fetch('/api/admin/update-candidate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, visionPoster: null })
+            });
+            
+            const data = await res.json();
+            if (data.success) {
+                const posterPreview = document.getElementById(`poster-preview-${id}`);
+                if (posterPreview) {
+                    posterPreview.src = '';
+                    posterPreview.style.display = 'none';
+                }
+                showCustomAlert('Berhasil', 'Poster berhasil dihapus', false);
+            } else {
+                showCustomAlert('Error', 'Gagal menghapus poster', true);
+            }
+        } catch (error) {
+            showCustomAlert('Error', 'Gagal menghapus poster', true);
+        }
+    });
 }
 
 async function saveCandidate(id) {
