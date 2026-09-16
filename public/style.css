@@ -259,8 +259,11 @@ header {
     font-size: 0.85rem;
     color: var(--text-muted);
     margin-bottom: 25px;
-    line-height: 1.5;
+    line-height: 1.6;
     flex-grow: 1;
+    text-align: justify;
+    white-space: pre-line;
+    word-break: break-word;
 }
 
 .candidate-video {
