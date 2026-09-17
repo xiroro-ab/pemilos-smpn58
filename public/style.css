@@ -347,11 +347,10 @@ header {
 .app-footer {
     text-align: center;
     color: var(--text-muted);
-    font-size: 0.85rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.2;
     margin-top: auto;
-    padding-top: 40px;
-    padding-bottom: 20px;
+    padding: 10px 0;
 }
 
 /* Custom Modal & Animation Styles */
