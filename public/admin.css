@@ -12,7 +12,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .view { display: none; }
-.view.active { display: flex; min-height: 100vh; }
+.view.active { display: flex; min-height: 100vh; margin-top: 0; padding-top: 0; }
 .hidden { display: none !important; }
 
 /* Buttons */
@@ -85,6 +85,13 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .sidebar.open { 
     transform: translateX(0); 
 }
+.sidebar-header { padding: 30px 25px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+.sidebar-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #f1f5f9; }
+.sidebar ul { list-style: none; flex-grow: 1; padding: 15px 0; }
+.sidebar li { padding: 12px 25px; cursor: pointer; color: var(--text-muted); transition: 0.2s; font-weight: 500; display: flex; gap: 12px; align-items: center; font-size: 0.95rem; }
+.sidebar li:hover, .sidebar li.active { background: rgba(255,255,255,0.05); color: white; border-right: 3px solid var(--primary); }
+.btn-logout { margin: 25px; width: calc(100% - 50px); background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-logout:hover { color: white; background: rgba(255,255,255,0.05); }
 
 .overlay { 
     display: none; 
@@ -104,21 +111,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .content {
     flex-grow: 1;
     width: 100%;
-    padding: 0 40px 20px 40px; /* Padding-top: 0, Padding-bottom: 20px */
-    min-height: 100vh;
-    overflow-y: auto;
-}
-.sidebar-header { padding: 30px 25px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
-.sidebar-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #f1f5f9; }
-.sidebar ul { list-style: none; flex-grow: 1; padding: 15px 0; }
-.sidebar li { padding: 12px 25px; cursor: pointer; color: var(--text-muted); transition: 0.2s; font-weight: 500; display: flex; gap: 12px; align-items: center; font-size: 0.95rem; }
-.sidebar li:hover, .sidebar li.active { background: rgba(255,255,255,0.05); color: white; border-right: 3px solid var(--primary); }
-.btn-logout { margin: 25px; width: calc(100% - 50px); background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-.btn-logout:hover { color: white; background: rgba(255,255,255,0.05); }
-
-.content {
-    flex-grow: 1;
-    padding: 40px;
+    padding: 10px 40px;
     overflow-y: auto;
     height: 100vh;
     display: flex;
