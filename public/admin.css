@@ -104,7 +104,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .content {
     flex-grow: 1;
     width: 100%;
-    padding: 20px 40px; /* Kurangi padding atas dari 40px ke 20px */
+    padding: 0 40px 20px 40px; /* Padding-top: 0, Padding-bottom: 20px */
     min-height: 100vh;
     overflow-y: auto;
 }
