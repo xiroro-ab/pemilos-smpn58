@@ -43,16 +43,12 @@ function switchTab(tabId, element) {
     Object.values(tabs).forEach(t => { t.classList.remove('active'); t.classList.add('hidden'); });
     tabs[tabId].classList.remove('hidden'); tabs[tabId].classList.add('active');
     
-    // Auto-hide sidebar untuk mode presentasi (dashboard & live feed)
-    const presentationTabs = ['dashboard', 'live'];
-    if (presentationTabs.includes(tabId)) {
-        document.querySelector('.sidebar').classList.remove('open');
-        document.querySelector('.overlay').classList.remove('active');
-        document.querySelector('.sidebar').classList.add('auto-hidden');
-        document.querySelector('.mobile-header').classList.add('show-hamburger');
-    } else {
-        document.querySelector('.sidebar').classList.remove('auto-hidden');
-        document.querySelector('.mobile-header').classList.remove('show-hamburger');
+    // Auto-close sidebar after selecting a tab
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.overlay');
+    if (sidebar && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
     }
 }
 
@@ -967,30 +963,11 @@ window.closeCustomModal = function(isConfirm) {
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.overlay');
-    const desktopHamburger = document.querySelector('.desktop-hamburger');
     if (!sidebar || !overlay) return;
-    
-    // If sidebar is in auto-hidden mode, open it
-    if (sidebar.classList.contains('auto-hidden')) {
-        sidebar.classList.remove('auto-hidden');
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        if (desktopHamburger) desktopHamburger.style.display = 'flex';
-        return;
-    }
     
     if (sidebar.classList.contains('open')) {
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
-        // If in presentation mode tabs, auto-hide again
-        const activeLi = document.querySelector('.sidebar li.active');
-        if (activeLi) {
-            const tabText = activeLi.textContent.toLowerCase().trim();
-            if (tabText.includes('dasbor') || tabText.includes('live feed') || tabText.includes('livefeed')) {
-                sidebar.classList.add('auto-hidden');
-                if (desktopHamburger) desktopHamburger.style.display = 'none';
-            }
-        }
     } else {
         sidebar.classList.add('open');
         overlay.classList.add('active');
