@@ -36,6 +36,9 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 /* Dashboard Layout */
 #admin-dashboard-view { flex-direction: row; }
 .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; border-right: 1px solid var(--border); z-index: 100; transition: transform 0.3s ease; }
+.auto-hidden { transform: translateX(-260px); }
+.show-hamburger .hamburger-btn { display: block; }
+.show-hamburger .mobile-header h2 { display: none; }
 .sidebar-header { padding: 30px 25px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
 .sidebar-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #f1f5f9; }
 .sidebar ul { list-style: none; flex-grow: 1; padding: 15px 0; }

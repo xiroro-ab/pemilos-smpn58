@@ -42,6 +42,18 @@ function switchTab(tabId, element) {
     
     Object.values(tabs).forEach(t => { t.classList.remove('active'); t.classList.add('hidden'); });
     tabs[tabId].classList.remove('hidden'); tabs[tabId].classList.add('active');
+    
+    // Auto-hide sidebar untuk mode presentasi (dashboard & live feed)
+    const presentationTabs = ['dashboard', 'live'];
+    if (presentationTabs.includes(tabId)) {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.querySelector('.overlay').classList.remove('active');
+        document.querySelector('.sidebar').classList.add('auto-hidden');
+        document.querySelector('.mobile-header').classList.add('show-hamburger');
+    } else {
+        document.querySelector('.sidebar').classList.remove('auto-hidden');
+        document.querySelector('.mobile-header').classList.remove('show-hamburger');
+    }
 }
 
 async function initDashboard() {
@@ -955,7 +967,14 @@ window.closeCustomModal = function(isConfirm) {
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.overlay');
-    if (sidebar && overlay) {
+    if (!sidebar || !overlay) return;
+    
+    // If sidebar is in auto-hidden mode (presenter mode), clicking toggles open
+    if (sidebar.classList.contains('auto-hidden')) {
+        sidebar.classList.remove('auto-hidden');
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+    } else {
         sidebar.classList.toggle('open');
         overlay.classList.toggle('active');
     }
