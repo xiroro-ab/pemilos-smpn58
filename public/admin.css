@@ -59,7 +59,11 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
     .content header { padding-left: 0; }
     .content header div { width: 100%; }
     .content header > div:first-child { margin-bottom: 10px; }
-    #floating-hamburger { top: 10px; left: 10px; }
+    #floating-hamburger { 
+        top: 10px; 
+        right: 15px; 
+        left: auto; /* Hapus posisi kiri */
+    }
 }
 
 .sidebar { 
