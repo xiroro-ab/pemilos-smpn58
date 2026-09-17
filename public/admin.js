@@ -967,17 +967,35 @@ window.closeCustomModal = function(isConfirm) {
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.overlay');
+    const desktopHamburger = document.querySelector('.desktop-hamburger');
     if (!sidebar || !overlay) return;
     
-    // If sidebar is in auto-hidden mode (presenter mode), clicking toggles open
+    // If sidebar is in auto-hidden mode, open it
     if (sidebar.classList.contains('auto-hidden')) {
         sidebar.classList.remove('auto-hidden');
         sidebar.classList.add('open');
         overlay.classList.add('active');
-    } else {
-        sidebar.classList.toggle('open');
-        overlay.classList.toggle('active');
+        if (desktopHamburger) desktopHamburger.style.display = 'flex';
+        return;
     }
+    
+    if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        // If in presentation mode tabs, auto-hide again
+        const activeLi = document.querySelector('.sidebar li.active');
+        if (activeLi) {
+            const tabText = activeLi.textContent.toLowerCase().trim();
+            if (tabText.includes('dasbor') || tabText.includes('live feed') || tabText.includes('livefeed')) {
+                sidebar.classList.add('auto-hidden');
+                if (desktopHamburger) desktopHamburger.style.display = 'none';
+            }
+        }
+    } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+    }
+}
 }
 
 function cancelImport() {
