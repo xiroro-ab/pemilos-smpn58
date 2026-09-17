@@ -38,12 +38,15 @@ body {
 .view {
     display: none;
     width: 100%;
-    margin: auto;
+    flex-grow: 1;
     animation: fadeIn 0.4s ease forwards;
 }
 
 .view.active {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 @keyframes fadeIn {
