@@ -996,7 +996,6 @@ function toggleSidebar() {
         overlay.classList.add('active');
     }
 }
-}
 
 function cancelImport() {
     parsedStudents = [];
