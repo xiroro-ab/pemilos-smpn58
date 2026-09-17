@@ -226,7 +226,7 @@ select option {
     .sidebar.open { left: 0; }
     .overlay.active { display: block; }
     .mobile-header { display: flex; }
-    .content { padding: 20px; overflow-x: hidden; width: 100%; }
+    .content { padding: 20px 20px 10px 20px; overflow-x: hidden; width: 100%; }
     .stats-grid { grid-template-columns: 1fr; }
     .edit-card { flex-direction: column; align-items: center; text-align: center; }
     .csv-table-wrapper { overflow-x: auto; width: 100%; border-radius: 8px; }
@@ -321,4 +321,14 @@ select option {
     pointer-events: none;
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255,255,255,0.1);
+}
+
+.app-footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.2;
+    margin-top: auto;
+    padding: 10px 0 0 0;
+    width: 100%;
 }

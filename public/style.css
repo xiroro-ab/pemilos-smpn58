@@ -353,6 +353,7 @@ header {
     line-height: 1.2;
     margin-top: auto;
     padding: 10px 0 0 0;
+    width: 100%;
 }
 
 /* Custom Modal & Animation Styles */
